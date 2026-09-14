@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── Base (Black & White) ── */
+    --background: #F7F7F7;
+    --foreground: #111111;
+    --card: #FFFFFF;
+    --card-foreground: #111111;
+    --surface: #EBEBEB;
+
+    --muted: #F2F2F2;
+    --muted-foreground: #888888;
+
+    --border: #E0E0E0;
+
+    /* Status colors (fixed regardless of accent) */
+    --danger: #E11D48;
+    --danger-soft: #FFF1F2;
+
+    --warning: #D97706;
+    --warning-soft: #FFFBEB;
+
+    --info: #2563EB;
+    --info-soft: #EFF6FF;
+
+    --success: #059669;
+    --success-soft: #ECFDF5;
+  }
+}
