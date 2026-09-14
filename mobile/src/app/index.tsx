@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomNav } from '../components/ui';
-import { cardShadow, Colors } from '../constants/theme';
+import { cardBorder, cardShadow, Colors, softShadow } from '../constants/theme';
 import { useAppTheme } from '../context/theme-context';
 import {
   collectionOn,
@@ -163,13 +163,13 @@ export default function Home() {
   });
 
   // Hero gradient derived from accent so it responds to any theme
-  const heroGradient = gradientFromAccent(accent.value, accent.dark);
+  const heroGradient = gradientFromAccent(accent.color, accent.dark);
 
   const categories = [
-    { label: 'Delivery',  icon: Truck,    to: '/delivery',  bg: accent.soft,   iconColor: accent.value },
-    { label: 'Customers', icon: UserPlus, to: '/customers', bg: Colors.infoSoft,  iconColor: Colors.info },
-    { label: 'Billing',   icon: Wallet,   to: '/billing',   bg: '#EDE7F6',        iconColor: '#6A1B9A' },
-    { label: 'Reports',   icon: FileText, to: '/reports',   bg: '#FFF3E0',        iconColor: '#E65100' },
+    { label: 'Delivery', icon: Truck, to: '/delivery', bg: accent.soft, iconColor: accent.color },
+    { label: 'Customers', icon: UserPlus, to: '/customers', bg: Colors.infoSoft, iconColor: Colors.info },
+    { label: 'Billing', icon: Wallet, to: '/billing', bg: '#EDE7F6', iconColor: '#6A1B9A' },
+    { label: 'Reports', icon: FileText, to: '/reports', bg: '#FFF3E0', iconColor: '#E65100' },
   ];
 
   const topPad = insets.top > 0 ? insets.top : Platform.OS === 'android' ? 32 : 44;
@@ -202,7 +202,7 @@ export default function Home() {
                 width: 44,
                 height: 44,
                 borderRadius: 22,
-                backgroundColor: accent.value,
+                backgroundColor: accent.color,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -230,7 +230,7 @@ export default function Home() {
                     paddingHorizontal: 8,
                     paddingVertical: 2,
                     borderWidth: 1,
-                    borderColor: `${accent.value}40`,
+                    borderColor: `${accent.color}40`,
                   }}
                 >
                   <View
@@ -238,10 +238,10 @@ export default function Home() {
                       width: 6,
                       height: 6,
                       borderRadius: 3,
-                      backgroundColor: accent.value,
+                      backgroundColor: accent.color,
                     }}
                   />
-                  <Text style={{ fontSize: 11, fontWeight: '800', color: accent.value }}>
+                  <Text style={{ fontSize: 11, fontWeight: '800', color: accent.color }}>
                     Pro
                   </Text>
                 </View>
@@ -258,7 +258,9 @@ export default function Home() {
               backgroundColor: Colors.card,
               alignItems: 'center',
               justifyContent: 'center',
-              ...cardShadow,
+              borderWidth: 1,
+              borderColor: 'rgba(0, 0, 0, 0.04)',
+              ...softShadow,
             }}
           >
             <Bell size={20} color={Colors.foreground} />
@@ -275,7 +277,7 @@ export default function Home() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderWidth: 2,
-                  borderColor: Colors.background,
+                  borderColor: Colors.card,
                 }}
               >
                 <Text style={{ fontSize: 8, fontWeight: '900', color: 'white' }}>
@@ -293,10 +295,12 @@ export default function Home() {
               flexDirection: 'row',
               alignItems: 'center',
               backgroundColor: Colors.card,
-              borderRadius: 16,
+              borderRadius: 18,
               paddingHorizontal: 14,
               paddingVertical: 12,
-              ...cardShadow,
+              borderWidth: 1,
+              borderColor: 'rgba(0, 0, 0, 0.04)',
+              ...softShadow,
             }}
           >
             <Search size={18} color={Colors.mutedForeground} style={{ marginRight: 10 }} />
@@ -310,23 +314,21 @@ export default function Home() {
                 color: Colors.foreground,
               }}
             />
-            <Settings2 size={18} color={accent.value} />
+            <Settings2 size={18} color={accent.color} />
           </View>
         </View>
 
         {/* ══════════════════════════════════════════════════
-            HERO CARD — accent-themed gradient
+            HERO CARD — Clean Apple subtle elevation
         ══════════════════════════════════════════════════ */}
         <View style={{ paddingHorizontal: 20, marginBottom: 4 }}>
           <View
             style={{
               borderRadius: 24,
               overflow: 'hidden',
-              shadowColor: accent.dark,
-              shadowOffset: { width: 0, height: 10 },
-              shadowOpacity: 0.25,
-              shadowRadius: 20,
-              elevation: 12,
+              borderWidth: 1,
+              borderColor: 'rgba(0, 0, 0, 0.04)',
+              ...cardShadow,
             }}
           >
             <LinearGradient
@@ -468,10 +470,6 @@ export default function Home() {
                     width: 145,
                     alignItems: 'center',
                     justifyContent: 'flex-end',
-                    shadowColor: '#ffffff',
-                    shadowOffset: { width: 0, height: 0 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 24,
                   }}
                 >
                   <Image
@@ -495,13 +493,14 @@ export default function Home() {
               flexDirection: 'row',
               backgroundColor: Colors.card,
               borderRadius: 20,
+              ...cardBorder,
               ...cardShadow,
             }}
           >
             {[
-              { label: "Today's Milk",    value: `${totalMilk.toFixed(1)} L`, icon: Milk,        bg: accent.soft,        ic: accent.value },
-              { label: 'Collected',       value: money0(totalCollection),     icon: IndianRupee, bg: Colors.infoSoft,    ic: Colors.info },
-              { label: 'Active Customers',value: `${active.length}`,          icon: UserPlus,    bg: '#FFF3E0',          ic: '#E65100' },
+              { label: "Today's Milk", value: `${totalMilk.toFixed(1)} L`, icon: Milk, bg: accent.soft, ic: accent.color },
+              { label: 'Collected', value: money0(totalCollection), icon: IndianRupee, bg: Colors.infoSoft, ic: Colors.info },
+              { label: 'Active Customers', value: `${active.length}`, icon: UserPlus, bg: '#FFF3E0', ic: '#E65100' },
             ].map((s, i) => {
               const Icon = s.icon;
               return (
@@ -547,8 +546,8 @@ export default function Home() {
               Quick Access
             </Text>
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: accent.value }}>Customize</Text>
-              <Pencil size={12} color={accent.value} />
+              <Text style={{ fontSize: 13, fontWeight: '700', color: accent.color }}>Customize</Text>
+              <Pencil size={12} color={accent.color} />
             </TouchableOpacity>
           </View>
 
@@ -569,6 +568,7 @@ export default function Home() {
                       backgroundColor: cat.bg,
                       alignItems: 'center',
                       justifyContent: 'center',
+                      ...cardBorder,
                       ...cardShadow,
                     }}
                   >
@@ -586,7 +586,7 @@ export default function Home() {
         {/* ── Today's Overview cards ─────────────────── */}
         <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 14 }}>
-            <TrendingUp size={17} color={accent.value} />
+            <TrendingUp size={17} color={accent.color} />
             <Text style={{ fontSize: 17, fontWeight: '800', color: Colors.foreground }}>
               Today's Overview
             </Text>
@@ -600,17 +600,18 @@ export default function Home() {
                 backgroundColor: Colors.card,
                 borderRadius: 20,
                 padding: 16,
+                ...cardBorder,
                 ...cardShadow,
                 overflow: 'hidden',
               }}
             >
-              <Text style={{ fontSize: 10, fontWeight: '800', color: accent.value, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
+              <Text style={{ fontSize: 10, fontWeight: '800', color: accent.color, letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 4 }}>
                 Today's Milk
               </Text>
               <Text style={{ fontSize: 24, fontWeight: '900', color: Colors.foreground, marginBottom: 12 }}>
                 {totalMilk.toFixed(1)} L
               </Text>
-              <Sparkline data={milkData} color={accent.value} width={120} height={40} />
+              <Sparkline data={milkData} color={accent.color} width={120} height={40} />
               {/* decorative image */}
               <Image
                 source={require('../../assets/images/onboarding.png')}
@@ -633,6 +634,7 @@ export default function Home() {
                 backgroundColor: Colors.card,
                 borderRadius: 20,
                 padding: 16,
+                ...cardBorder,
                 ...cardShadow,
                 overflow: 'hidden',
               }}
@@ -655,6 +657,7 @@ export default function Home() {
               backgroundColor: Colors.card,
               borderRadius: 20,
               overflow: 'hidden',
+              ...cardBorder,
               ...cardShadow,
             }}
           >
@@ -677,13 +680,13 @@ export default function Home() {
               },
               ...(highBalanceCount > 0
                 ? [{
-                    icon: AlertCircle,
-                    bg: Colors.warningSoft,
-                    ic: Colors.warning,
-                    label: 'Customers with due >₹500',
-                    value: `${highBalanceCount}`,
-                    valueColor: Colors.warning,
-                  }]
+                  icon: AlertCircle,
+                  bg: Colors.warningSoft,
+                  ic: Colors.warning,
+                  label: 'Customers with due >₹500',
+                  value: `${highBalanceCount}`,
+                  valueColor: Colors.warning,
+                }]
                 : []),
             ].map((row, i, arr) => {
               const Icon = row.icon;
@@ -731,13 +734,13 @@ export default function Home() {
               Recent Activity
             </Text>
             <TouchableOpacity onPress={() => router.push('/delivery')}>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: accent.value }}>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: accent.color }}>
                 View All
               </Text>
             </TouchableOpacity>
           </View>
 
-          <View style={{ backgroundColor: Colors.card, borderRadius: 20, overflow: 'hidden', ...cardShadow }}>
+          <View style={{ backgroundColor: Colors.card, borderRadius: 20, overflow: 'hidden', ...cardBorder, ...cardShadow }}>
             {recentDeliveries.length === 0 ? (
               <View style={{ padding: 24, alignItems: 'center' }}>
                 <Text style={{ fontSize: 14, fontWeight: '600', color: Colors.mutedForeground }}>
@@ -775,7 +778,7 @@ export default function Home() {
                     >
                       <Truck
                         size={18}
-                        color={isDelivered ? accent.value : isSkipped ? Colors.danger : Colors.warning}
+                        color={isDelivered ? accent.color : isSkipped ? Colors.danger : Colors.warning}
                       />
                     </View>
 
@@ -802,7 +805,7 @@ export default function Home() {
                         style={{
                           fontSize: 11,
                           fontWeight: '800',
-                          color: isDelivered ? accent.value : isSkipped ? Colors.danger : Colors.warning,
+                          color: isDelivered ? accent.color : isSkipped ? Colors.danger : Colors.warning,
                         }}
                       >
                         {isDelivered ? 'Completed' : isSkipped ? 'Skipped' : 'Pending'}

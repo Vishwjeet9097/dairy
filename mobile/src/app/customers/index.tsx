@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { ChevronRight, Phone, Search, SlidersHorizontal, UserPlus } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StatusBar, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Avatar, BottomNav } from '../../components/ui';
-import { cardShadow, Colors, softShadow } from '../../constants/theme';
+import { cardBorder, cardShadow, Colors, softShadow } from '../../constants/theme';
 import { useAppTheme } from '../../context/theme-context';
 import { money0, outstanding, useDairyStore } from '../../lib/dairy-store';
 
@@ -59,7 +59,7 @@ export default function CustomersScreen() {
               placeholder="Search customers..."
               placeholderTextColor="#9CA3AF"
               className="flex-1 rounded-full bg-white py-3.5 pl-11 pr-12 text-sm font-semibold"
-              style={{ color: Colors.foreground }}
+              style={[{ color: Colors.foreground }, cardBorder]}
             />
             <View className="absolute right-4 z-10">
               <SlidersHorizontal size={17} color="#9CA3AF" />
@@ -77,7 +77,7 @@ export default function CustomersScreen() {
                 key={c.id}
                 onPress={() => router.push(`/customers/${c.id}`)}
                 className="flex-row items-center gap-4 rounded-[24px] bg-white p-4 mb-4"
-                style={cardShadow}
+                style={[cardBorder, cardShadow]}
               >
                 <Avatar name={c.name} size={52} />
 
@@ -124,7 +124,7 @@ export default function CustomersScreen() {
           })}
 
           {list.length === 0 && (
-            <View className="rounded-[24px] bg-white p-10 items-center justify-center mt-4" style={cardShadow}>
+            <View className="rounded-[24px] bg-white p-10 items-center justify-center mt-4" style={[cardBorder, cardShadow]}>
               <Text style={{ fontSize: 15, fontWeight: '700', color: Colors.mutedForeground }}>
                 No customers found.
               </Text>

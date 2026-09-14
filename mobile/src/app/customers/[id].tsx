@@ -1,26 +1,25 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
-    BookOpen,
-    ChevronRight,
-    FileText,
-    MapPin,
-    Milk,
-    Pause,
-    Phone,
-    Play,
-    ReceiptText,
-    Wallet,
+  BookOpen,
+  ChevronRight,
+  FileText,
+  MapPin,
+  Milk,
+  Pause,
+  Phone,
+  Play,
+  ReceiptText,
+  Wallet,
 } from 'lucide-react-native';
-import React from 'react';
 import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { Avatar, TopBar } from '../../components/ui';
-import { cardShadow, Colors, softShadow } from '../../constants/theme';
+import { cardBorder, cardShadow, Colors, softShadow } from '../../constants/theme';
 import { useAppTheme } from '../../context/theme-context';
 import {
-    customerBilled,
-    money0,
-    outstanding,
-    useDairyStore,
+  customerBilled,
+  money0,
+  outstanding,
+  useDairyStore,
 } from '../../lib/dairy-store';
 
 function ActionRow({
@@ -98,7 +97,7 @@ export default function CustomerDetailScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Profile card */}
-        <View className="rounded-[28px] bg-white p-6 mb-5 items-center" style={cardShadow}>
+        <View className="rounded-[28px] bg-white p-6 mb-5 items-center" style={[cardBorder, cardShadow]}>
           <Avatar name={c.name} size={76} />
           <Text style={{ marginTop: 14, fontSize: 20, fontWeight: '800', color: Colors.foreground }}>
             {c.name}
@@ -148,7 +147,7 @@ export default function CustomerDetailScreen() {
             <View
               key={stat.label}
               className="flex-1 rounded-[20px] bg-white p-4 items-center"
-              style={cardShadow}
+              style={[cardBorder, cardShadow]}
             >
               <Text style={{
                 fontSize: 17,
@@ -168,25 +167,25 @@ export default function CustomerDetailScreen() {
         {/* Rate card */}
         <View
           className="rounded-[20px] p-4 mb-5 flex-row items-center justify-between"
-          style={{ backgroundColor: accent.soft }}
+          style={[{ backgroundColor: accent.soft }, cardBorder]}
         >
           <View className="flex-row items-center gap-3">
-            <Milk size={20} color={accent.value} />
-            <Text style={{ fontSize: 14, fontWeight: '700', color: accent.value }}>
+            <Milk size={20} color={accent.color} />
+            <Text style={{ fontSize: 14, fontWeight: '700', color: accent.color }}>
               Rate per Litre
             </Text>
           </View>
-          <Text style={{ fontSize: 18, fontWeight: '800', color: accent.value }}>
+          <Text style={{ fontSize: 18, fontWeight: '800', color: accent.color }}>
             ₹{c.rate}
           </Text>
         </View>
 
         {/* Actions */}
-        <View className="rounded-[24px] bg-white px-5 mb-5" style={cardShadow}>
+        <View className="rounded-[24px] bg-white px-5 mb-5" style={[cardBorder, cardShadow]}>
           <ActionRow
             icon={BookOpen}
             iconBg={accent.soft}
-            iconColor={accent.value}
+            iconColor={accent.color}
             label="View Ledger"
             onPress={() => router.push(`/customers/${c.id}/ledger` as any)}
           />
@@ -200,7 +199,7 @@ export default function CustomerDetailScreen() {
           <ActionRow
             icon={FileText}
             iconBg={accent.soft}
-            iconColor={accent.value}
+            iconColor={accent.color}
             label="Generate Bill"
             onPress={() => router.push(`/customers/${c.id}/bill` as any)}
           />
@@ -235,7 +234,7 @@ export default function CustomerDetailScreen() {
         <TouchableOpacity
           onPress={() => router.push(`/customers/${c.id}/payment` as any)}
           className="w-full rounded-full py-4 items-center flex-row justify-center gap-2"
-          style={{ backgroundColor: accent.value }}
+          style={{ backgroundColor: accent.color }}
         >
           <Wallet size={20} color="white" />
           <Text style={{ fontSize: 16, fontWeight: '800', color: 'white', letterSpacing: 0.3 }}>

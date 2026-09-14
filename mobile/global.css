@@ -4,29 +4,36 @@
 
 @layer base {
   :root {
-    /* ── Base (Black & White) ── */
-    --background: #F7F7F7;
-    --foreground: #111111;
+    /* ── Clean, Bright, Flat Apple Base Palette ── */
+    --background: #F9FAFB;
+    --foreground: #111827;
     --card: #FFFFFF;
-    --card-foreground: #111111;
-    --surface: #EBEBEB;
+    --card-foreground: #111827;
+    --surface: #F3F4F6;
 
-    --muted: #F2F2F2;
-    --muted-foreground: #888888;
+    --muted: #F3F4F6;
+    --muted-foreground: #6B7280;
 
-    --border: #E0E0E0;
+    --border: #E5E7EB;
 
-    /* Status colors (fixed regardless of accent) */
-    --danger: #E11D48;
-    --danger-soft: #FFF1F2;
+    /* Status colors */
+    --danger: #EF4444;
+    --danger-soft: #FEF2F2;
 
-    --warning: #D97706;
+    --warning: #F59E0B;
     --warning-soft: #FFFBEB;
 
-    --info: #2563EB;
+    --info: #3B82F6;
     --info-soft: #EFF6FF;
 
-    --success: #059669;
+    --success: #10B981;
     --success-soft: #ECFDF5;
+  }
+}
+
+@layer utilities {
+  .card-highlight {
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.04);
   }
 }

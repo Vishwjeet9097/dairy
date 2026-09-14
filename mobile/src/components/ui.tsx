@@ -1,7 +1,7 @@
 import { usePathname, useRouter } from 'expo-router';
 import { ChevronLeft, FileText, Home, ReceiptText, Settings, UserPlus } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Colors, cardShadow, softShadow } from '../constants/theme';
+import { Colors, cardBorder, cardShadow, floatingShadow, softShadow } from '../constants/theme';
 import { useAppTheme } from '../context/theme-context';
 
 export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
@@ -16,9 +16,11 @@ export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
         backgroundColor: accent.soft,
         alignItems: 'center',
         justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.04)',
       }}
     >
-      <Text style={{ fontSize: size * 0.4, fontWeight: '800', color: accent.value }}>
+      <Text style={{ fontSize: size * 0.4, fontWeight: '800', color: accent.color }}>
         {initial}
       </Text>
     </View>
@@ -27,20 +29,19 @@ export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
 
 export function TopBar({ title, right }: { title: string; right?: React.ReactNode }) {
   const router = useRouter();
-  const { accent } = useAppTheme();
   return (
     <View
-      className="flex-row items-center justify-between px-6 py-4 pt-14"
-      style={{ backgroundColor: Colors.card, ...cardShadow }}
+      className="flex-row items-center justify-between px-6 py-4 pt-14 border-b border-gray-100"
+      style={{ backgroundColor: Colors.card, ...softShadow }}
     >
       <TouchableOpacity
         onPress={() => router.back()}
-        className="h-10 w-10 items-center justify-center rounded-full"
-        style={{ backgroundColor: Colors.surface }}
+        activeOpacity={0.7}
+        className="h-10 w-10 items-center justify-center rounded-full bg-gray-50 border border-black/[0.04]"
       >
-        <ChevronLeft color={Colors.foreground} size={24} />
+        <ChevronLeft color={Colors.foreground} size={22} />
       </TouchableOpacity>
-      <Text className="text-[17px] font-bold" style={{ color: Colors.foreground }}>
+      <Text className="text-[17px] font-bold text-gray-900 tracking-tight">
         {title}
       </Text>
       <View className="w-10 items-end">{right}</View>
@@ -54,17 +55,17 @@ export function BottomNav() {
   const { accent } = useAppTheme();
 
   const options = [
-    { name: 'Home',      to: '/',          icon: Home },
+    { name: 'Home', to: '/', icon: Home },
     { name: 'Customers', to: '/customers', icon: UserPlus },
-    { name: 'Billing',   to: '/billing',   icon: ReceiptText },
-    { name: 'Reports',   to: '/reports',   icon: FileText },
-    { name: 'Settings',  to: '/settings',  icon: Settings },
+    { name: 'Billing', to: '/billing', icon: ReceiptText },
+    { name: 'Reports', to: '/reports', icon: FileText },
+    { name: 'Settings', to: '/settings', icon: Settings },
   ];
 
   return (
     <View
-      className="absolute bottom-0 left-0 right-0 z-50 bg-white border-t border-[#EBEBEB]"
-      style={{ paddingBottom: 24, ...softShadow }}
+      className="absolute bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100"
+      style={{ paddingBottom: 24, ...floatingShadow }}
     >
       <View className="flex-row items-center justify-around pt-3 pb-1">
         {options.map((opt) => {
@@ -85,13 +86,13 @@ export function BottomNav() {
                   backgroundColor: isActive ? accent.soft : 'transparent',
                 }}
               >
-                <Icon size={20} color={isActive ? accent.value : '#AAAAAA'} />
+                <Icon size={20} color={isActive ? accent.color : '#9CA3AF'} />
               </View>
               <Text
                 style={{
                   fontSize: 10,
-                  fontWeight: '700',
-                  color: isActive ? accent.value : '#AAAAAA',
+                  fontWeight: isActive ? '800' : '600',
+                  color: isActive ? accent.color : '#9CA3AF',
                 }}
               >
                 {opt.name}

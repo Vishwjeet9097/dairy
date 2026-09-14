@@ -170,6 +170,8 @@ export default function MapPickerModal({
             paddingTop: insets.top + 8,
             paddingHorizontal: 16, paddingBottom: 8,
             backgroundColor: Colors.card,
+            borderBottomWidth: 1,
+            borderBottomColor: 'rgba(0, 0, 0, 0.04)',
             ...softShadow,
           }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: results.length > 0 ? 8 : 0 }}>
@@ -207,7 +209,7 @@ export default function MapPickerModal({
                 onPress={handleSearch}
                 style={{
                   width: 40, height: 40, borderRadius: 20,
-                  backgroundColor: accent.value, alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: accent.color, alignItems: 'center', justifyContent: 'center',
                 }}
               >
                 {searching
@@ -227,7 +229,7 @@ export default function MapPickerModal({
                   paddingVertical: 10, borderTopWidth: 1, borderTopColor: Colors.border,
                 }}
               >
-                <MapPin size={15} color={accent.value} style={{ marginTop: 2 }} />
+                <MapPin size={15} color={accent.color} style={{ marginTop: 2 }} />
                 <Text style={{ flex: 1, fontSize: 13, fontWeight: '600', color: Colors.foreground }} numberOfLines={2}>
                   {r.display_name}
                 </Text>
@@ -256,18 +258,21 @@ export default function MapPickerModal({
             position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10,
             paddingBottom: insets.bottom + 12,
             paddingHorizontal: 16, paddingTop: 14,
-            backgroundColor: Colors.card, ...softShadow,
+            backgroundColor: Colors.card,
+            borderTopWidth: 1,
+            borderTopColor: 'rgba(0, 0, 0, 0.04)',
+            ...softShadow,
           }}>
             {reversing ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <ActivityIndicator size="small" color={accent.value} />
+                <ActivityIndicator size="small" color={accent.color} />
                 <Text style={{ fontSize: 13, fontWeight: '600', color: Colors.mutedForeground }}>
                   Fetching address…
                 </Text>
               </View>
             ) : selectedAddress ? (
               <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginBottom: 12 }}>
-                <MapPin size={15} color={accent.value} style={{ marginTop: 2 }} />
+                <MapPin size={15} color={accent.color} style={{ marginTop: 2 }} />
                 <Text style={{ flex: 1, fontSize: 13, fontWeight: '600', color: Colors.foreground }} numberOfLines={2}>
                   {selectedAddress}
                 </Text>
@@ -277,7 +282,7 @@ export default function MapPickerModal({
             <TouchableOpacity
               onPress={handleConfirm}
               style={{
-                backgroundColor: accent.value, borderRadius: 18,
+                backgroundColor: accent.color, borderRadius: 18,
                 paddingVertical: 15, flexDirection: 'row', alignItems: 'center',
                 justifyContent: 'center', gap: 8,
               }}

@@ -1,29 +1,27 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  StatusBar,
-  TextInput,
-  Switch,
-  Alert,
-} from 'react-native';
 import { useRouter } from 'expo-router';
 import {
   Check,
+  ChevronRight,
+  IndianRupee,
+  Info,
   Palette,
   Store,
-  User,
-  IndianRupee,
   Trash2,
-  ChevronRight,
-  Info,
+  User,
 } from 'lucide-react-native';
-import { useDairyStore } from '../lib/dairy-store';
+import { useState } from 'react';
+import {
+  Alert,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import { cardBorder, cardShadow, Colors, softShadow } from '../constants/theme';
 import { ACCENT_COLORS, useAppTheme } from '../context/theme-context';
-import { Colors, softShadow, cardShadow } from '../constants/theme';
-import { TopBar } from '../components/ui';
+import { useDairyStore } from '../lib/dairy-store';
 
 export default function SettingsScreen() {
   const router = useRouter();
@@ -66,7 +64,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View className="flex-1 bg-[#F7F7F7] relative">
+    <View className="flex-1 relative" style={{ backgroundColor: Colors.background }}>
       <StatusBar barStyle="light-content" />
 
       {/* Header */}
@@ -102,7 +100,7 @@ export default function SettingsScreen() {
         </Text>
         <View
           className="bg-white rounded-[24px] p-5 mb-6"
-          style={cardShadow}
+          style={[cardBorder, cardShadow]}
         >
           <View className="flex-row flex-wrap gap-3">
             {ACCENT_COLORS.map((color) => {
@@ -114,28 +112,33 @@ export default function SettingsScreen() {
                   className="items-center gap-2"
                   style={{ width: 64 }}
                 >
-                  {/* Swatch */}
+                  {/* Swatch - clean Apple concentric ring */}
                   <View
                     style={{
                       width: 48,
                       height: 48,
                       borderRadius: 24,
-                      backgroundColor: color.value,
                       alignItems: 'center',
                       justifyContent: 'center',
-                      borderWidth: isSelected ? 3 : 0,
-                      borderColor: isSelected ? color.value : 'transparent',
-                      // outer ring via shadow when selected
-                      shadowColor: color.value,
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: isSelected ? 0.5 : 0,
-                      shadowRadius: isSelected ? 8 : 0,
-                      elevation: isSelected ? 6 : 0,
+                      borderWidth: isSelected ? 2 : 1,
+                      borderColor: isSelected ? color.value : 'rgba(0, 0, 0, 0.08)',
+                      padding: 3,
                     }}
                   >
-                    {isSelected && (
-                      <Check size={20} color="white" strokeWidth={3} />
-                    )}
+                    <View
+                      style={{
+                        flex: 1,
+                        width: '100%',
+                        borderRadius: 20,
+                        backgroundColor: color.value,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {isSelected && (
+                        <Check size={18} color="white" strokeWidth={3} />
+                      )}
+                    </View>
                   </View>
                   <Text
                     className="text-[11px] font-bold text-center"
@@ -157,7 +160,7 @@ export default function SettingsScreen() {
             <View className="flex-row gap-3">
               <View
                 className="flex-1 rounded-2xl py-3 items-center"
-                style={{ backgroundColor: accent.value }}
+                style={{ backgroundColor: accent.color }}
               >
                 <Text className="text-[13px] font-bold text-white">
                   Primary
@@ -169,18 +172,18 @@ export default function SettingsScreen() {
               >
                 <Text
                   className="text-[13px] font-bold"
-                  style={{ color: accent.value }}
+                  style={{ color: accent.color }}
                 >
                   Soft
                 </Text>
               </View>
               <View
                 className="flex-1 rounded-2xl py-3 items-center border"
-                style={{ borderColor: accent.value }}
+                style={{ borderColor: accent.color }}
               >
                 <Text
                   className="text-[13px] font-bold"
-                  style={{ color: accent.value }}
+                  style={{ color: accent.color }}
                 >
                   Outline
                 </Text>
@@ -193,13 +196,13 @@ export default function SettingsScreen() {
         <Text className="text-[13px] font-bold text-[#888888] uppercase tracking-widest mb-3">
           Dairy Info
         </Text>
-        <View className="bg-white rounded-[24px] p-5 mb-6" style={cardShadow}>
+        <View className="bg-white rounded-[24px] p-5 mb-6" style={[cardBorder, cardShadow]}>
           <View className="mb-4">
             <Text className="text-[12px] font-bold text-[#888888] mb-1.5 uppercase tracking-wide">
               Dairy Name
             </Text>
             <View className="flex-row items-center gap-3 bg-[#F7F7F7] rounded-2xl px-4 py-3">
-              <Store size={18} color={accent.value} />
+              <Store size={18} color={accent.color} />
               <TextInput
                 value={dairyName}
                 onChangeText={setDairyName}
@@ -215,7 +218,7 @@ export default function SettingsScreen() {
               Owner Name
             </Text>
             <View className="flex-row items-center gap-3 bg-[#F7F7F7] rounded-2xl px-4 py-3">
-              <User size={18} color={accent.value} />
+              <User size={18} color={accent.color} />
               <TextInput
                 value={ownerName}
                 onChangeText={setOwnerName}
@@ -232,7 +235,7 @@ export default function SettingsScreen() {
                 Default Rate (₹/L)
               </Text>
               <View className="flex-row items-center gap-3 bg-[#F7F7F7] rounded-2xl px-4 py-3">
-                <IndianRupee size={18} color={accent.value} />
+                <IndianRupee size={18} color={accent.color} />
                 <TextInput
                   value={defaultRate}
                   onChangeText={setDefaultRate}
@@ -248,7 +251,7 @@ export default function SettingsScreen() {
                 Delivery Charge
               </Text>
               <View className="flex-row items-center gap-3 bg-[#F7F7F7] rounded-2xl px-4 py-3">
-                <IndianRupee size={18} color={accent.value} />
+                <IndianRupee size={18} color={accent.color} />
                 <TextInput
                   value={deliveryCharge}
                   onChangeText={setDeliveryCharge}
@@ -264,7 +267,7 @@ export default function SettingsScreen() {
           <TouchableOpacity
             onPress={handleSaveSettings}
             className="mt-5 rounded-2xl py-3.5 items-center"
-            style={{ backgroundColor: accent.value }}
+            style={{ backgroundColor: accent.color }}
           >
             <Text className="text-[15px] font-bold text-white tracking-wide">
               Save Changes
@@ -276,14 +279,14 @@ export default function SettingsScreen() {
         <Text className="text-[13px] font-bold text-[#888888] uppercase tracking-widest mb-3">
           About
         </Text>
-        <View className="bg-white rounded-[24px] px-5 mb-6" style={cardShadow}>
+        <View className="bg-white rounded-[24px] px-5 mb-6" style={[cardBorder, cardShadow]}>
           <View className="flex-row items-center justify-between py-4 border-b border-[#F0F0F0]">
             <View className="flex-row items-center gap-3">
               <View
                 className="h-9 w-9 rounded-full items-center justify-center"
                 style={{ backgroundColor: accent.soft }}
               >
-                <Info size={18} color={accent.value} />
+                <Info size={18} color={accent.color} />
               </View>
               <Text className="text-[15px] font-bold text-[#111111]">App Version</Text>
             </View>
@@ -296,7 +299,7 @@ export default function SettingsScreen() {
                 className="h-9 w-9 rounded-full items-center justify-center"
                 style={{ backgroundColor: accent.soft }}
               >
-                <Store size={18} color={accent.value} />
+                <Store size={18} color={accent.color} />
               </View>
               <Text className="text-[15px] font-bold text-[#111111]">Dairy Manager</Text>
             </View>
@@ -308,7 +311,7 @@ export default function SettingsScreen() {
         <Text className="text-[13px] font-bold text-[#888888] uppercase tracking-widest mb-3">
           Danger Zone
         </Text>
-        <View className="bg-white rounded-[24px] px-5" style={cardShadow}>
+        <View className="bg-white rounded-[24px] px-5" style={[cardBorder, cardShadow]}>
           <TouchableOpacity
             onPress={handleReset}
             className="flex-row items-center gap-3 py-4"

@@ -1,22 +1,21 @@
 import {
-    Activity,
-    BarChart2, Download,
-    FileText,
-    IndianRupee, Milk,
-    TrendingUp
+  Activity,
+  BarChart2, Download,
+  FileText,
+  IndianRupee, Milk,
+  TrendingUp
 } from 'lucide-react-native';
-import React from 'react';
 import { ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import { BottomNav } from '../components/ui';
-import { cardShadow, Colors, softShadow } from '../constants/theme';
+import { cardBorder, cardShadow, Colors, softShadow } from '../constants/theme';
 import { useAppTheme } from '../context/theme-context';
 import {
-    collectionOn,
-    milkOn,
-    money0,
-    todayISO,
-    totalOutstanding,
-    useDairyStore,
+  collectionOn,
+  milkOn,
+  money0,
+  todayISO,
+  totalOutstanding,
+  useDairyStore,
 } from '../lib/dairy-store';
 
 export default function ReportsScreen() {
@@ -86,7 +85,7 @@ export default function ReportsScreen() {
           {/* Outstanding card */}
           <View
             className="rounded-[28px] bg-white p-6 mb-5 items-center"
-            style={cardShadow}
+            style={[cardBorder, cardShadow]}
           >
             <Text style={{ fontSize: 13, fontWeight: '700', color: Colors.mutedForeground, marginBottom: 6 }}>
               Total Outstanding
@@ -103,8 +102,8 @@ export default function ReportsScreen() {
               className="mt-4 flex-row items-center gap-1.5 rounded-full px-3 py-1.5"
               style={{ backgroundColor: accent.soft }}
             >
-              <TrendingUp size={13} color={accent.value} />
-              <Text style={{ fontSize: 11, fontWeight: '800', color: accent.value }}>Live Sync</Text>
+              <TrendingUp size={13} color={accent.color} />
+              <Text style={{ fontSize: 11, fontWeight: '800', color: accent.color }}>Live Sync</Text>
             </View>
           </View>
 
@@ -113,12 +112,12 @@ export default function ReportsScreen() {
             Last 7 Days
           </Text>
           <View className="flex-row gap-4 mb-5">
-            <View className="flex-1 rounded-[24px] bg-white p-5" style={cardShadow}>
+            <View className="flex-1 rounded-[24px] bg-white p-5" style={[cardBorder, cardShadow]}>
               <View
                 className="h-10 w-10 rounded-full items-center justify-center mb-3"
                 style={{ backgroundColor: accent.soft }}
               >
-                <IndianRupee size={20} color={accent.value} />
+                <IndianRupee size={20} color={accent.color} />
               </View>
               <Text style={{ fontSize: 20, fontWeight: '800', color: Colors.foreground }}>
                 {money0(totalCollection7d)}
@@ -128,12 +127,12 @@ export default function ReportsScreen() {
               </Text>
             </View>
 
-            <View className="flex-1 rounded-[24px] bg-white p-5" style={cardShadow}>
+            <View className="flex-1 rounded-[24px] bg-white p-5" style={[cardBorder, cardShadow]}>
               <View
                 className="h-10 w-10 rounded-full items-center justify-center mb-3"
                 style={{ backgroundColor: accent.soft }}
               >
-                <Milk size={20} color={accent.value} />
+                <Milk size={20} color={accent.color} />
               </View>
               <Text style={{ fontSize: 20, fontWeight: '800', color: Colors.foreground }}>
                 {totalMilk7d.toFixed(1)} L
@@ -145,7 +144,7 @@ export default function ReportsScreen() {
           </View>
 
           {/* Mini bar chart */}
-          <View className="rounded-[24px] bg-white p-5 mb-5" style={cardShadow}>
+          <View className="rounded-[24px] bg-white p-5 mb-5" style={[cardBorder, cardShadow]}>
             <View className="flex-row items-center justify-between mb-5">
               <Text style={{ fontSize: 15, fontWeight: '800', color: Colors.foreground }}>
                 Daily Milk (L)
@@ -162,7 +161,7 @@ export default function ReportsScreen() {
                       className="rounded-t-lg w-6"
                       style={{
                         height: barH,
-                        backgroundColor: isToday ? accent.value : `${accent.value}40`,
+                        backgroundColor: isToday ? accent.color : `${accent.color}40`,
                       }}
                     />
                     <Text style={{ fontSize: 10, fontWeight: '700', color: Colors.mutedForeground }}>
@@ -177,13 +176,13 @@ export default function ReportsScreen() {
           {/* Ledger export row */}
           <TouchableOpacity
             className="rounded-[24px] bg-white p-5 flex-row items-center gap-4"
-            style={cardShadow}
+            style={[cardBorder, cardShadow]}
           >
             <View
               className="h-12 w-12 items-center justify-center rounded-full"
               style={{ backgroundColor: accent.soft }}
             >
-              <FileText size={24} color={accent.value} />
+              <FileText size={24} color={accent.color} />
             </View>
             <View className="flex-1">
               <Text style={{ fontSize: 16, fontWeight: '800', color: Colors.foreground }}>
@@ -193,7 +192,7 @@ export default function ReportsScreen() {
                 Export customer data
               </Text>
             </View>
-            <Download size={20} color={accent.value} />
+            <Download size={20} color={accent.color} />
           </TouchableOpacity>
         </View>
       </ScrollView>

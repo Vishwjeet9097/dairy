@@ -1,16 +1,14 @@
 import { useRouter } from 'expo-router';
 import {
-  Droplets,
   Home,
   IndianRupee,
   MapPin,
   Milk,
   Phone,
-  RefreshCw,
   User,
-  Zap,
+  Zap
 } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -23,8 +21,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import MapPickerModal from '../../components/map-picker-modal';
 import { TopBar } from '../../components/ui';
-import { cardShadow, Colors, softShadow } from '../../constants/theme';
+import { cardBorder, cardShadow, Colors, softShadow } from '../../constants/theme';
 import { useAppTheme } from '../../context/theme-context';
 import {
   MilkType,
@@ -32,7 +31,6 @@ import {
   uid,
   useDairyStore,
 } from '../../lib/dairy-store';
-import MapPickerModal from '../../components/map-picker-modal';
 
 const MILK_TYPES: MilkType[] = ['cow', 'buffalo', 'toned', 'full_cream', 'custom'];
 
@@ -68,7 +66,7 @@ function InputRow({ icon: Icon, value, onChangeText, placeholder, keyboardType, 
       flexDirection: 'row', alignItems: 'center', gap: 12,
       backgroundColor: Colors.surface, borderRadius: 16, paddingHorizontal: 16, paddingVertical: 13,
     }}>
-      <Icon size={18} color={accent.value} />
+      <Icon size={18} color={accent.color} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -145,7 +143,7 @@ export default function AddCustomerScreen() {
       >
         {/* ── Basic Info ── */}
         <SectionLabel label="Basic Info" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardBorder, ...cardShadow }}>
           <View style={{ marginBottom: 14 }}>
             <FieldLabel label="Full Name" />
             <InputRow icon={User} value={name} onChangeText={setName} placeholder="e.g. Rohan Sharma" />
@@ -158,14 +156,14 @@ export default function AddCustomerScreen() {
 
         {/* ── Address ── */}
         <SectionLabel label="Address" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardBorder, ...cardShadow }}>
           <FieldLabel label="Delivery Address" />
           <View style={{
             flexDirection: 'row', alignItems: 'center', gap: 12,
             backgroundColor: Colors.surface, borderRadius: 16, paddingHorizontal: 16, paddingVertical: 13,
             marginBottom: 12,
           }}>
-            <Home size={18} color={accent.value} />
+            <Home size={18} color={accent.color} />
             <TextInput
               value={address}
               onChangeText={setAddress}
@@ -180,11 +178,11 @@ export default function AddCustomerScreen() {
             style={{
               flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
               borderRadius: 16, paddingVertical: 12,
-              borderWidth: 1.5, borderColor: accent.value,
+              borderWidth: 1.5, borderColor: accent.color,
             }}
           >
-            <MapPin size={16} color={accent.value} />
-            <Text style={{ fontSize: 13, fontWeight: '800', color: accent.value }}>
+            <MapPin size={16} color={accent.color} />
+            <Text style={{ fontSize: 13, fontWeight: '800', color: accent.color }}>
               {latitude ? 'Change on Map' : 'Pick on Map'}
             </Text>
           </TouchableOpacity>
@@ -197,7 +195,7 @@ export default function AddCustomerScreen() {
 
         {/* ── Milk Type ── */}
         <SectionLabel label="Milk Type" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardBorder, ...cardShadow }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
             {MILK_TYPES.map((t) => {
               const selected = milkType === t;
@@ -207,7 +205,7 @@ export default function AddCustomerScreen() {
                   onPress={() => setMilkType(t)}
                   style={{
                     paddingHorizontal: 16, paddingVertical: 9, borderRadius: 20,
-                    backgroundColor: selected ? accent.value : Colors.surface,
+                    backgroundColor: selected ? accent.color : Colors.surface,
                     borderWidth: selected ? 0 : 1.5,
                     borderColor: Colors.border,
                   }}
@@ -226,7 +224,7 @@ export default function AddCustomerScreen() {
 
         {/* ── Delivery Qty ── */}
         <SectionLabel label="Daily Quantity" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardBorder, ...cardShadow }}>
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={{ flex: 1 }}>
               <FieldLabel label="Morning (L)" />
@@ -234,7 +232,7 @@ export default function AddCustomerScreen() {
                 flexDirection: 'row', alignItems: 'center', gap: 10,
                 backgroundColor: Colors.surface, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 13,
               }}>
-                <Milk size={16} color={accent.value} />
+                <Milk size={16} color={accent.color} />
                 <TextInput
                   value={morningQty}
                   onChangeText={setMorningQty}
@@ -267,7 +265,7 @@ export default function AddCustomerScreen() {
 
         {/* ── Pricing ── */}
         <SectionLabel label="Pricing" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 20, ...cardBorder, ...cardShadow }}>
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={{ flex: 1 }}>
               <FieldLabel label="Rate (₹/L)" />
@@ -282,7 +280,7 @@ export default function AddCustomerScreen() {
 
         {/* ── Auto Delivery ── */}
         <SectionLabel label="Automation" />
-        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 24, ...cardShadow }}>
+        <View style={{ backgroundColor: Colors.card, borderRadius: 24, padding: 20, marginBottom: 24, ...cardBorder, ...cardShadow }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 }}>
               <View style={{
@@ -290,7 +288,7 @@ export default function AddCustomerScreen() {
                 backgroundColor: autoDelivery ? accent.soft : Colors.surface,
                 alignItems: 'center', justifyContent: 'center',
               }}>
-                <Zap size={19} color={autoDelivery ? accent.value : Colors.mutedForeground} />
+                <Zap size={19} color={autoDelivery ? accent.color : Colors.mutedForeground} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 15, fontWeight: '700', color: Colors.foreground }}>
@@ -304,8 +302,8 @@ export default function AddCustomerScreen() {
             <Switch
               value={autoDelivery}
               onValueChange={setAutoDelivery}
-              trackColor={{ false: Colors.surface, true: `${accent.value}60` }}
-              thumbColor={autoDelivery ? accent.value : Colors.mutedForeground}
+              trackColor={{ false: Colors.surface, true: `${accent.color}60` }}
+              thumbColor={autoDelivery ? accent.color : Colors.mutedForeground}
             />
           </View>
         </View>
@@ -315,12 +313,12 @@ export default function AddCustomerScreen() {
       <View style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         backgroundColor: Colors.card, paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32,
-        borderTopWidth: 1, borderTopColor: Colors.border, ...softShadow,
+        borderTopWidth: 1, borderTopColor: 'rgba(0, 0, 0, 0.04)', ...softShadow,
       }}>
         <TouchableOpacity
           onPress={handleSave}
           style={{
-            backgroundColor: accent.value, borderRadius: 20,
+            backgroundColor: accent.color, borderRadius: 20,
             paddingVertical: 16, alignItems: 'center',
             flexDirection: 'row', justifyContent: 'center', gap: 8,
           }}

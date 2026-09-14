@@ -4,7 +4,9 @@ import { useDairyStore } from '../lib/dairy-store';
 export interface AccentColor {
   id: string;
   label: string;
-  value: string;       // hex for icon/text
+  value: string;       // hex for icon/text (backward compatibility)
+  color: string;       // safe for inline styles without Reanimated SharedValue warning
+  hex: string;         // alias
   dark: string;        // darker variant
   soft: string;        // light bg tint
   header: string;      // header background
@@ -15,6 +17,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'mono',
     label: 'Monochrome',
     value: '#1A1A1A',
+    color: '#1A1A1A',
+    hex: '#1A1A1A',
     dark: '#000000',
     soft: '#F2F2F2',
     header: '#1A1A1A',
@@ -23,6 +27,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'green',
     label: 'Forest',
     value: '#00A350',
+    color: '#00A350',
+    hex: '#00A350',
     dark: '#007A3A',
     soft: '#E8F7F0',
     header: '#00A350',
@@ -31,6 +37,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'blue',
     label: 'Ocean',
     value: '#2563EB',
+    color: '#2563EB',
+    hex: '#2563EB',
     dark: '#1D4ED8',
     soft: '#EFF6FF',
     header: '#2563EB',
@@ -39,6 +47,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'purple',
     label: 'Violet',
     value: '#7C3AED',
+    color: '#7C3AED',
+    hex: '#7C3AED',
     dark: '#6D28D9',
     soft: '#F5F3FF',
     header: '#7C3AED',
@@ -47,6 +57,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'rose',
     label: 'Rose',
     value: '#E11D48',
+    color: '#E11D48',
+    hex: '#E11D48',
     dark: '#BE123C',
     soft: '#FFF1F2',
     header: '#E11D48',
@@ -55,6 +67,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'amber',
     label: 'Amber',
     value: '#D97706',
+    color: '#D97706',
+    hex: '#D97706',
     dark: '#B45309',
     soft: '#FFFBEB',
     header: '#D97706',
@@ -63,6 +77,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'teal',
     label: 'Teal',
     value: '#0D9488',
+    color: '#0D9488',
+    hex: '#0D9488',
     dark: '#0F766E',
     soft: '#F0FDFA',
     header: '#0D9488',
@@ -71,6 +87,8 @@ export const ACCENT_COLORS: AccentColor[] = [
     id: 'slate',
     label: 'Slate',
     value: '#475569',
+    color: '#475569',
+    hex: '#475569',
     dark: '#334155',
     soft: '#F8FAFC',
     header: '#475569',

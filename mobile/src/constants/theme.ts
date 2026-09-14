@@ -5,21 +5,22 @@ import { Platform } from 'react-native';
  * Static B&W palette. Screens pull dynamic accent from useAppTheme() instead.
  */
 export const Colors = {
-  background: '#F7F7F7',
-  foreground: '#111111',
+  background: '#F9FAFB',
+  foreground: '#111827',
   card: '#FFFFFF',
-  surface: '#EBEBEB',
-  border: '#E0E0E0',
-  muted: '#F2F2F2',
-  mutedForeground: '#888888',
+  surface: '#F3F4F6',
+  border: '#E5E7EB',
+  borderSubtle: 'rgba(0, 0, 0, 0.04)',
+  muted: '#F3F4F6',
+  mutedForeground: '#6B7280',
 
-  danger: '#E11D48',
-  dangerSoft: '#FFF1F2',
-  warning: '#D97706',
+  danger: '#EF4444',
+  dangerSoft: '#FEF2F2',
+  warning: '#F59E0B',
   warningSoft: '#FFFBEB',
-  info: '#2563EB',
+  info: '#3B82F6',
   infoSoft: '#EFF6FF',
-  success: '#059669',
+  success: '#10B981',
   successSoft: '#ECFDF5',
 } as const;
 
@@ -54,18 +55,61 @@ export const Spacing = {
   six: 64,
 } as const;
 
+/** Subtle ambient card shadow — soft light falloff, minimal spread */
 export const softShadow = {
-  elevation: 3,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.06,
-  shadowRadius: 12,
+  elevation: 1,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.02,
+  shadowRadius: 10,
 };
 
+/** Primary Apple-style card elevation — large, wide blur, low opacity (0.03) */
 export const cardShadow = {
-  elevation: 2,
-  shadowColor: '#000',
+  elevation: 1,
+  shadowColor: '#000000',
   shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.03,
+  shadowRadius: 16,
+};
+
+/** Raised card elevation */
+export const elevatedShadow = {
+  elevation: 2,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 3 },
   shadowOpacity: 0.04,
-  shadowRadius: 8,
+  shadowRadius: 20,
+};
+
+/** Floating bar/action sheet shadow — soft diffuse light, no harsh contrast */
+export const floatingShadow = {
+  elevation: 3,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.05,
+  shadowRadius: 24,
+};
+
+/** Clean neutral ambient elevation (zero glow, no colored halo) */
+export const glowShadow = (_color?: string) => ({
+  elevation: 1,
+  shadowColor: '#000000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.03,
+  shadowRadius: 12,
+});
+
+/** Faint highlight border around card edges for crisp Apple hardware definition */
+export const cardBorder = {
+  borderWidth: 1,
+  borderColor: 'rgba(0, 0, 0, 0.04)',
+};
+
+/** Clean, bright, flat Apple card surface */
+export const luxuryCard = {
+  backgroundColor: '#FFFFFF',
+  borderRadius: 20,
+  ...cardBorder,
+  ...cardShadow,
 };
