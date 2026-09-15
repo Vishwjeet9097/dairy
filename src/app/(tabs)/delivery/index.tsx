@@ -309,7 +309,7 @@ function ActionBar({ children }: { children: React.ReactNode }) {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 0,
+    paddingTop: 24,
   },
   overlap: {
     paddingHorizontal: Layout.gutter,

@@ -175,7 +175,7 @@ export default function CustomersScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 0,
+    paddingTop: 24,
   },
   overlap: {
     paddingHorizontal: Layout.gutter,
