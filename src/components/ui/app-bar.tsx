@@ -96,6 +96,8 @@ export function AppBar({
 export interface ScreenHeaderProps {
   title: string;
   subtitle?: string;
+  /** Leading icon action, rendered before the title (e.g. Hamburger menu). */
+  leftAction?: ReactNode;
   /** Trailing icon action, rendered on a translucent disc. */
   action?: ReactNode;
   /** Content below the titles — typically a search field. */
@@ -111,6 +113,7 @@ export interface ScreenHeaderProps {
 export function ScreenHeader({
   title,
   subtitle,
+  leftAction,
   action,
   children,
   bottomInset = 16,
@@ -133,6 +136,7 @@ export function ScreenHeader({
       ]}
     >
       <View style={styles.headerRow}>
+        {leftAction ? <View style={styles.headerLeftAction}>{leftAction}</View> : null}
         <View style={styles.headerTitles}>
           <Text numberOfLines={1} maxFontSizeMultiplier={1.3} style={styles.headerTitle}>
             {title}
@@ -225,6 +229,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 12,
+  },
+  headerLeftAction: {
+    marginRight: 4,
   },
   headerTitles: {
     flex: 1,

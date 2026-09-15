@@ -60,7 +60,6 @@ export const TABS: readonly TabDefinition[] = [
   { name: 'customers', labelKey: 'nav.customers', a11yKey: 'nav.customers', icon: Users },
   { name: 'delivery', labelKey: 'nav.delivery', a11yKey: 'nav.delivery', icon: Truck },
   { name: 'billing', labelKey: 'nav.billing', a11yKey: 'nav.billing', icon: ReceiptText },
-  { name: 'more', labelKey: 'nav.more', a11yKey: 'nav.more', icon: MoreHorizontal },
 ];
 
 /**

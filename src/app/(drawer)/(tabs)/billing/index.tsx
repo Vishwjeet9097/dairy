@@ -10,6 +10,7 @@
  * the active tab correctly reflects where the user now is.
  */
 
+import { DrawerToggleButton } from 'expo-router/drawer';
 import { useScrollToTop } from 'expo-router';
 import { ChevronRight, FileText, ReceiptText, Wallet } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
@@ -60,6 +61,16 @@ export default function BillingScreen() {
     [balances],
   );
 
+  const stats = useMemo(() => {
+    let overdueCustomers = 0;
+    for (const balance of balances.values()) {
+      if (balance > 0) {
+        overdueCustomers++;
+      }
+    }
+    return { overdueCustomers };
+  }, [balances]);
+
   const list = useMemo(() => {
     const needle = query.trim().toLowerCase();
     const base = needle
@@ -75,7 +86,8 @@ export default function BillingScreen() {
     <Screen statusBar="light">
       <ScreenHeader
         title={t('title.billing')}
-        subtitle="Dues & collection"
+        subtitle={stats.overdueCustomers > 0 ? `${stats.overdueCustomers} accounts overdue` : 'All accounts settled'}
+        leftAction={<DrawerToggleButton tintColor="#FFF" />}
         action={
           <View style={styles.headerIcon}>
             <ReceiptText size={22} color="white" />

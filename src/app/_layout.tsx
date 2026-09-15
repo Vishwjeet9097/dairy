@@ -49,7 +49,7 @@ export default function RootLayout() {
               ...ScreenTransition.push,
             }}
           >
-            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(drawer)" />
             <Stack.Screen name="+not-found" options={ScreenTransition.modal} />
           </Stack>
         </FeedbackProvider>

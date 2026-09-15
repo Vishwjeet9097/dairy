@@ -12,6 +12,7 @@ import { useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AnimatedValueText, ListItem } from '@/components/motion';
+import { DrawerToggleButton } from 'expo-router/drawer';
 import {
   Avatar,
   Badge,
@@ -76,6 +77,7 @@ export default function CustomersScreen() {
       <ScreenHeader
         title={t('title.customers')}
         subtitle={`${activeCount} active · ${customers.length} total`}
+        leftAction={<DrawerToggleButton tintColor="#FFF" />}
         action={
           <HeaderAction
             icon={UserPlus}

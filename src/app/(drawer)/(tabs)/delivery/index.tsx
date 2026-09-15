@@ -10,6 +10,8 @@
  * is the confirmation that the tap landed.
  */
 
+import { LinearGradient } from 'expo-linear-gradient';
+import { DrawerToggleButton } from 'expo-router/drawer';
 import { useScrollToTop } from 'expo-router';
 import { Calendar, Check, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
@@ -134,6 +136,7 @@ export default function DeliveryScreen() {
         title={t('title.delivery')}
         subtitle={isToday ? `Today · ${displayDate}` : displayDate}
         bottomInset={40}
+        leftAction={<DrawerToggleButton tintColor="#FFF" />}
         action={
           <IconButton
             icon={Calendar}

@@ -9,13 +9,15 @@ import { BarChart2, Download, FileText, IndianRupee, Milk, TrendingUp } from 'lu
 import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { DrawerToggleButton } from 'expo-router/drawer';
+
 import { AnimatedValueText, useFeedback } from '@/components/motion';
 import {
-  AppBar,
   Badge,
   Card,
   NavRow,
   Screen,
+  ScreenHeader,
   SectionHeading,
 } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
@@ -82,7 +84,11 @@ export default function ReportsScreen() {
 
   return (
     <Screen>
-      <AppBar title={t('title.reports')} />
+      <ScreenHeader
+        title={t('title.reports')}
+        subtitle="View farm analytics"
+        leftAction={<DrawerToggleButton tintColor="#FFF" />}
+      />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom }]}

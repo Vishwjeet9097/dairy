@@ -16,21 +16,11 @@
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { useScrollToTop } from 'expo-router';
-import {
-  AlertCircle,
-  Bell,
-  ChevronRight,
-  FileText,
-  IndianRupee,
-  Milk,
-  Truck,
-  UserPlus,
-  Users,
-  Wallet,
-} from 'lucide-react-native';
+import { AlertCircle, Bell, ChevronRight, FileText, IndianRupee, Milk, Truck, UserPlus, Users, Wallet } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { DrawerToggleButton } from 'expo-router/drawer';
 
 import {
   AnimatedValueText,
@@ -197,7 +187,7 @@ export default function HomeScreen() {
     { label: t('nav.delivery'), icon: Truck, href: '/delivery', tint: accent.color, wash: accent.soft },
     { label: t('nav.customers'), icon: Users, href: '/customers', tint: Colors.info, wash: Colors.infoSoft },
     { label: t('nav.billing'), icon: Wallet, href: '/billing', tint: Colors.success, wash: Colors.successSoft },
-    { label: t('title.reports'), icon: FileText, href: '/more/reports', tint: Colors.warning, wash: Colors.warningSoft },
+    { label: t('title.reports'), icon: FileText, href: '/reports', tint: Colors.warning, wash: Colors.warningSoft },
   ] as const;
 
   const progressPct = Math.round(stats.progress * 100);
@@ -213,6 +203,7 @@ export default function HomeScreen() {
         {/* ── Greeting bar ── */}
         <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
           <View style={styles.identity}>
+            <DrawerToggleButton tintColor={Colors.foreground} />
             <Avatar name={settings.ownerName} size={44} />
             <View style={styles.identityText}>
               <Text style={styles.dairyName} numberOfLines={1}>
@@ -347,8 +338,8 @@ export default function HomeScreen() {
                   </View>
 
                   <Image
-                    // Depth accounts for this screen living in `src/app/(tabs)/`.
-                    source={require('../../../assets/images/onboarding.png')}
+                    // Depth accounts for this screen living in `src/app/(drawer)/(tabs)/`.
+                    source={require('../../../../assets/images/onboarding.png')}
                     style={styles.heroArt}
                     resizeMode="contain"
                     accessible={false}

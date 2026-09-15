@@ -15,14 +15,16 @@ import { Check, IndianRupee, Languages, Palette, Store, Trash2, User } from 'luc
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { DrawerToggleButton } from 'expo-router/drawer';
+
 import { PressableScale, useFeedback } from '@/components/motion';
 import {
-  AppBar,
   Button,
   Card,
   Dialog,
   Field,
   Screen,
+  ScreenHeader,
   SectionLabel,
   Segmented,
   ToggleRow,
@@ -81,7 +83,11 @@ export default function SettingsScreen() {
 
   return (
     <Screen>
-      <AppBar title={t('title.settings')} />
+      <ScreenHeader
+        title={t('title.settings')}
+        subtitle="App configuration"
+        leftAction={<DrawerToggleButton tintColor="#FFF" />}
+      />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom }]}

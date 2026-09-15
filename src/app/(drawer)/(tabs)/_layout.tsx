@@ -81,6 +81,10 @@ export default function TabsLayout() {
           }}
         />
       ))}
+      <Tabs.Screen name="cows/index" options={{ href: null }} />
+      <Tabs.Screen name="feed/index" options={{ href: null }} />
+      <Tabs.Screen name="reports" options={{ href: null }} />
+      <Tabs.Screen name="settings" options={{ href: null }} />
     </Tabs>
   );
 }
