@@ -15,12 +15,11 @@
  */
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { useScrollToTop } from 'expo-router';
+import { useNavigation, useScrollToTop } from 'expo-router';
 import { AlertCircle, Bell, ChevronRight, FileText, IndianRupee, Milk, Truck, UserPlus, Users, Wallet } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { DrawerToggleButton } from 'expo-router/drawer';
 
 import {
   AnimatedValueText,
@@ -69,6 +68,7 @@ import { useScreenPadding } from '@/navigation/use-tab-bar-height';
 
 export default function HomeScreen() {
   const nav = useNavGuard();
+  const navigation = useNavigation();
   const t = useT();
   const { accent } = useAppTheme();
   const insets = useSafeAreaInsets();
@@ -203,13 +203,11 @@ export default function HomeScreen() {
         {/* ── Greeting bar ── */}
         <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
           <View style={styles.identity}>
-            <DrawerToggleButton tintColor={Colors.foreground} />
-            <Avatar name={settings.ownerName} size={44} />
+            <PressableScale onPress={() => (navigation as any).toggleDrawer()}>
+              <Avatar name={settings.ownerName} size={44} />
+            </PressableScale>
             <View style={styles.identityText}>
-              <Text style={styles.dairyName} numberOfLines={1}>
-                {settings.dairyName}
-              </Text>
-              <Text style={styles.greeting} numberOfLines={1}>
+              <Text style={styles.dateDisplay} numberOfLines={1}>
                 {dateLabel}
               </Text>
             </View>
@@ -658,14 +656,10 @@ const styles = StyleSheet.create({
   identityText: {
     flex: 1,
   },
-  dairyName: {
-    ...Type.subtitle,
+  dateDisplay: {
+    ...Type.bodyStrong,
+    fontSize: 18,
     color: Colors.foreground,
-  },
-  greeting: {
-    ...Type.footnote,
-    color: Colors.mutedForeground,
-    marginTop: 1,
   },
   bell: {
     width: 44,
