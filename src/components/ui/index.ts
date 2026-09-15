@@ -8,6 +8,7 @@
 
 export { AppBar, HeaderAction, ScreenHeader, type AppBarProps, type ScreenHeaderProps } from './app-bar';
 export { Avatar, type AvatarProps } from './avatar';
+export { BottomFog } from './bottom-fog';
 export { BottomSheet, type BottomSheetProps } from './bottom-sheet';
 export {
   Button,

@@ -23,6 +23,7 @@ import {
 } from '@/components/motion';
 import {
   Avatar,
+  BottomFog,
   Button,
   Card,
   EmptyState,
@@ -269,6 +270,7 @@ export default function DeliveryScreen() {
         </View>
       </ScrollView>
 
+      <BottomFog />
       {/*
         Pinned above the tab bar rather than at the screen bottom, so the two
         pieces of chrome stack instead of overlapping.

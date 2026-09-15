@@ -31,6 +31,7 @@ import {
   AppBar,
   Avatar,
   Badge,
+  BottomFog,
   Button,
   Card,
   EmptyState,
@@ -207,6 +208,7 @@ export default function CustomerDetailScreen() {
         </Card>
       </ScrollView>
 
+      <BottomFog />
       <ActionBar>
         <Button
           label={t('title.addPayment')}
