@@ -1,7 +1,7 @@
 import { usePathname, useRouter } from 'expo-router';
 import { ChevronLeft, FileText, Home, ReceiptText, Settings, UserPlus } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Colors, cardBorder, cardShadow, floatingShadow, softShadow } from '../constants/theme';
+import { Colors, floatingShadow, softShadow } from '../constants/theme';
 import { useAppTheme } from '../context/theme-context';
 
 export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
