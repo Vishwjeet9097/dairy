@@ -10,6 +10,10 @@ export type PaymentMethod = "cash" | "upi" | "bank";
 export type MilkType = "cow" | "buffalo" | "toned" | "full_cream" | "custom";
 export type BillStatus = "unpaid" | "partially_paid" | "paid";
 export type Lang = "en" | "hi";
+export type CowStatus = "active" | "dry" | "pregnant" | "sold" | "deceased";
+export type FeedPaymentStatus = "paid" | "partial" | "due";
+export type NotificationCategory = "delivery" | "billing" | "cow" | "feed" | "system";
+export type FontSize = "small" | "default" | "large" | "xlarge";
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
@@ -29,6 +33,7 @@ export interface Customer {
   autoDeliveryEnabled: boolean;
   leaveRanges?: { from: string; to: string }[];
   creditLimit?: number;
+  notes?: string;
 }
 
 export interface DeliveryRecord {
@@ -41,6 +46,22 @@ export interface DeliveryRecord {
   status: DeliveryStatus;
   productType?: 'milk' | 'curd' | 'paneer' | 'ghee';
   autoMarked: boolean;
+}
+
+/**
+ * Extra milk is separate from regular deliveries so the bill breakdown
+ * can clearly distinguish "Regular: 60 L × ₹60" from "Extra: 5 L × ₹60".
+ * Attaching it to DeliveryRecord would require nulling qty and status, which
+ * would break every helper that reads those fields.
+ */
+export interface ExtraDelivery {
+  id: string;
+  customerId: string;
+  date: string; // yyyy-mm-dd
+  slot: Slot;
+  qty: number;
+  rate: number;
+  notes?: string;
 }
 
 export interface Payment {
@@ -59,6 +80,8 @@ export interface Bill {
   periodTo: string;
   totalQty: number;
   totalAmount: number;
+  extraQty: number;
+  extraAmount: number;
   deliveryCharge: number;
   openingBalanceCarried: number;
   amountPaidDuringPeriod: number;
@@ -75,6 +98,67 @@ export interface Settings {
   autoDeliveryDefault: boolean;
   billingCycleDay: number;
   notificationsEnabled: boolean;
+  morningDeliveryTime: string;   // "HH:MM" 24h
+  eveningDeliveryTime: string;   // "HH:MM" 24h
+  gestationDays: number;         // default 280
+  fontSize: FontSize;
+}
+
+// ─── Cow & Insemination ───────────────────────────────────────────────────────
+
+export interface Cow {
+  id: string;
+  name: string;         // name or tag number
+  breed: string;
+  birthDate?: string;   // yyyy-mm-dd
+  photo?: string;       // local file URI
+  purchaseDate?: string;
+  status: CowStatus;
+  notes?: string;
+  createdAt: string;    // ISO timestamp
+}
+
+export interface Insemination {
+  id: string;
+  cowId: string;
+  date: string;             // yyyy-mm-dd
+  semenInfo?: string;       // bull name / semen batch
+  technician?: string;
+  expectedCalvingDate: string; // computed from date + gestationDays
+  actualCalvingDate?: string;
+  notes?: string;
+  remindersSent: string[];  // list of reminder intervals already fired e.g. ["30d","7d"]
+}
+
+// ─── Feed ─────────────────────────────────────────────────────────────────────
+
+export interface FeedEntry {
+  id: string;
+  name: string;
+  category?: string;        // hay / concentrate / mineral / etc.
+  quantity: number;
+  unit: string;             // kg / bag / litre
+  supplier?: string;
+  purchaseDate: string;     // yyyy-mm-dd
+  rate: number;             // per unit
+  totalCost: number;        // quantity × rate
+  paidAmount: number;
+  remainingAmount: number;
+  paymentStatus: FeedPaymentStatus;
+  dueDate?: string;
+  notes?: string;
+}
+
+// ─── In-app Notification ─────────────────────────────────────────────────────
+
+export interface InAppNotification {
+  id: string;
+  category: NotificationCategory;
+  title: string;
+  body: string;
+  read: boolean;
+  createdAt: string;        // ISO timestamp
+  relatedId?: string;       // cowId / customerId / feedEntryId
 }
 
 // ─── Store interface ──────────────────────────────────────────────────────────
@@ -82,8 +166,13 @@ export interface Settings {
 interface DairyState {
   customers: Customer[];
   deliveries: DeliveryRecord[];
+  extraDeliveries: ExtraDelivery[];
   payments: Payment[];
   bills: Bill[];
+  cows: Cow[];
+  inseminations: Insemination[];
+  feedEntries: FeedEntry[];
+  inAppNotifications: InAppNotification[];
   settings: Settings;
   lang: Lang | null;
   themeAccentId: string;
@@ -105,6 +194,10 @@ interface DairyState {
   markAbsent: (customerId: string, date: string, slot: Slot) => void;
   runAutoDeliveryJob: (date: string) => void;
 
+  // Extra milk
+  addExtraDelivery: (e: Omit<ExtraDelivery, 'id'>) => void;
+  removeExtraDelivery: (id: string) => void;
+
   // Payments
   addPayment: (p: Omit<Payment, "id">) => void;
 
@@ -120,17 +213,58 @@ interface DairyState {
   // Settings
   saveSettings: (s: Settings) => void;
   resetAll: () => void;
+
+  // Cows
+  saveCow: (c: Cow) => void;
+  deleteCow: (id: string) => void;
+  saveInsemination: (ins: Insemination) => void;
+  deleteInsemination: (id: string) => void;
+  markCalvingDelivered: (inseminationId: string, actualDate: string) => void;
+  markReminderSent: (inseminationId: string, interval: string) => void;
+
+  // Feed
+  saveFeedEntry: (e: FeedEntry) => void;
+  deleteFeedEntry: (id: string) => void;
+  recordFeedPayment: (feedEntryId: string, amount: number) => void;
+
+  // In-app notifications
+  addInAppNotification: (n: Omit<InAppNotification, 'id' | 'read' | 'createdAt'>) => void;
+  markNotificationRead: (id: string) => void;
+  markAllNotificationsRead: () => void;
+  clearNotifications: () => void;
 }
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
-export const todayISO = () => new Date().toISOString().slice(0, 10);
+/**
+ * ─── Dates are LOCAL calendar dates ──────────────────────────────────────────
+ *
+ * A dairy round is a local-day concept: the morning delivery on the 15th belongs
+ * to the 15th wherever the phone is. Every `yyyy-mm-dd` string in this store is
+ * therefore a *local* date.
+ *
+ * `toISODate` formats from local calendar fields and never round-trips through
+ * UTC, so todayISO() and addDaysISO() always agree.
+ */
+function toISODate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Parses a `yyyy-mm-dd` string as local midnight. */
+function fromISODate(iso: string): Date {
+  return new Date(`${iso}T00:00:00`);
+}
+
+export const todayISO = () => toISODate(new Date());
 export const uid = () => Math.random().toString(36).slice(2, 10);
 
 export function addDaysISO(iso: string, days: number): string {
-  const d = new Date(iso + "T00:00:00");
+  const d = fromISODate(iso);
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  return toISODate(d);
 }
 
 export function formatMonthLabel(iso: string): string {
@@ -142,22 +276,41 @@ export function monthStart(iso: string): string {
 }
 
 export function monthEnd(iso: string): string {
-  const d = new Date(iso.slice(0, 7) + '-01T00:00:00');
+  const d = fromISODate(`${iso.slice(0, 7)}-01`);
   d.setMonth(d.getMonth() + 1);
+  // Day 0 of the next month is the last day of this one.
   d.setDate(0);
-  return d.toISOString().slice(0, 10);
+  return toISODate(d);
 }
 
 export function prevMonthISO(iso: string): string {
-  const d = new Date(iso.slice(0, 7) + '-01T00:00:00');
+  const d = fromISODate(`${iso.slice(0, 7)}-01`);
   d.setMonth(d.getMonth() - 1);
-  return d.toISOString().slice(0, 10);
+  return toISODate(d);
 }
 
 export function nextMonthISO(iso: string): string {
-  const d = new Date(iso.slice(0, 7) + '-01T00:00:00');
+  const d = fromISODate(`${iso.slice(0, 7)}-01`);
   d.setMonth(d.getMonth() + 1);
-  return d.toISOString().slice(0, 10);
+  return toISODate(d);
+}
+
+/**
+ * Calculates expected calving date using the configured gestation period.
+ * Uses local-calendar arithmetic to avoid UTC off-by-one issues.
+ */
+export function calcExpectedCalvingDate(inseminationDate: string, gestationDays: number): string {
+  return addDaysISO(inseminationDate, gestationDays);
+}
+
+/**
+ * Returns days remaining until the expected calving date.
+ * Negative means it's overdue.
+ */
+export function daysUntilCalving(expectedDate: string): number {
+  const today = fromISODate(todayISO());
+  const target = fromISODate(expectedDate);
+  return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 // ─── Seed helpers ─────────────────────────────────────────────────────────────
@@ -170,6 +323,10 @@ const DEFAULT_SETTINGS: Settings = {
   autoDeliveryDefault: true,
   billingCycleDay: 1,
   notificationsEnabled: false,
+  morningDeliveryTime: "08:00",
+  eveningDeliveryTime: "19:00",
+  gestationDays: 280,
+  fontSize: "default",
 };
 
 function seedCustomers(): Customer[] {
@@ -213,6 +370,82 @@ function seedPayments(): Payment[] {
   ];
 }
 
+function seedCows(): Cow[] {
+  const today = todayISO();
+  return [
+    {
+      id: "cow1",
+      name: "Lakshmi",
+      breed: "Sahiwal",
+      birthDate: addDaysISO(today, -1460),
+      purchaseDate: addDaysISO(today, -730),
+      status: "pregnant",
+      notes: "High milk yielder",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "cow2",
+      name: "Ganga",
+      breed: "Gir",
+      birthDate: addDaysISO(today, -1825),
+      purchaseDate: addDaysISO(today, -900),
+      status: "active",
+      createdAt: new Date().toISOString(),
+    },
+  ];
+}
+
+function seedInseminations(): Insemination[] {
+  const today = todayISO();
+  return [
+    {
+      id: "ins1",
+      cowId: "cow1",
+      date: addDaysISO(today, -200),
+      semenInfo: "HF Bull #A12",
+      technician: "Dr. Ramesh",
+      expectedCalvingDate: addDaysISO(today, 80),
+      notes: "Second insemination",
+      remindersSent: ["180d", "90d"],
+    },
+  ];
+}
+
+function seedFeedEntries(): FeedEntry[] {
+  const today = todayISO();
+  return [
+    {
+      id: "feed1",
+      name: "Wheat Bhusa",
+      category: "Roughage",
+      quantity: 100,
+      unit: "kg",
+      supplier: "Sharma Agro",
+      purchaseDate: addDaysISO(today, -5),
+      rate: 12,
+      totalCost: 1200,
+      paidAmount: 800,
+      remainingAmount: 400,
+      paymentStatus: "partial",
+      dueDate: addDaysISO(today, 25),
+    },
+    {
+      id: "feed2",
+      name: "Cattle Feed Pellets",
+      category: "Concentrate",
+      quantity: 50,
+      unit: "kg",
+      supplier: "ABC Feed Co.",
+      purchaseDate: addDaysISO(today, -2),
+      rate: 30,
+      totalCost: 1500,
+      paidAmount: 1500,
+      remainingAmount: 0,
+      paymentStatus: "paid",
+    },
+  ];
+}
+
 const initialCustomers = seedCustomers();
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -222,8 +455,13 @@ export const useDairyStore = create<DairyState>()(
     (set, get) => ({
       customers: initialCustomers,
       deliveries: seedDeliveries(initialCustomers),
+      extraDeliveries: [],
       payments: seedPayments(),
       bills: [],
+      cows: seedCows(),
+      inseminations: seedInseminations(),
+      feedEntries: seedFeedEntries(),
+      inAppNotifications: [],
       settings: DEFAULT_SETTINGS,
       lang: "en",
       themeAccentId: "mono",
@@ -242,6 +480,7 @@ export const useDairyStore = create<DairyState>()(
       deleteCustomer: (id) => set((state) => ({
         customers: state.customers.filter((c) => c.id !== id),
         deliveries: state.deliveries.filter((x) => x.customerId !== id),
+        extraDeliveries: state.extraDeliveries.filter((x) => x.customerId !== id),
         payments: state.payments.filter((x) => x.customerId !== id),
         bills: state.bills.filter((b) => b.customerId !== id),
       })),
@@ -329,6 +568,14 @@ export const useDairyStore = create<DairyState>()(
         return { deliveries, lastAutoDeliveryDate: date };
       }),
 
+      addExtraDelivery: (e) => set((state) => ({
+        extraDeliveries: [...state.extraDeliveries, { ...e, id: uid() }],
+      })),
+
+      removeExtraDelivery: (id) => set((state) => ({
+        extraDeliveries: state.extraDeliveries.filter((e) => e.id !== id),
+      })),
+
       addPayment: (p) => set((state) => ({
         payments: [...state.payments, { ...p, id: uid() }],
       })),
@@ -357,18 +604,30 @@ export const useDairyStore = create<DairyState>()(
         );
         const totalQty = deliveredRecords.reduce((s, x) => s + x.qty, 0);
         const totalAmount = deliveredRecords.reduce((s, x) => s + x.qty * x.rate, 0);
+
+        // Extra deliveries for this period
+        const extraRecords = state.extraDeliveries.filter(
+          (x) => x.customerId === customerId && x.date >= from && x.date <= to
+        );
+        const extraQty = extraRecords.reduce((s, x) => s + x.qty, 0);
+        const extraAmount = extraRecords.reduce((s, x) => s + x.qty * x.rate, 0);
+
         const paidDuring = state.payments
           .filter((p) => p.customerId === customerId && p.date >= from && p.date <= to)
           .reduce((s, p) => s + p.amount, 0);
+
         // Opening balance = all billed before `from` minus all paid before `from` + customer opening
         const billedBefore = state.deliveries
           .filter((x) => x.customerId === customerId && x.status === "delivered" && x.date < from)
           .reduce((s, x) => s + x.qty * x.rate, 0);
+        const extraBilledBefore = state.extraDeliveries
+          .filter((x) => x.customerId === customerId && x.date < from)
+          .reduce((s, x) => s + x.qty * x.rate, 0);
         const paidBefore = state.payments
           .filter((p) => p.customerId === customerId && p.date < from)
           .reduce((s, p) => s + p.amount, 0);
-        const openingBalanceCarried = (c.openingBalance ?? 0) + billedBefore - paidBefore;
-        const finalDue = openingBalanceCarried + totalAmount + state.settings.deliveryCharge - paidDuring;
+        const openingBalanceCarried = (c.openingBalance ?? 0) + billedBefore + extraBilledBefore - paidBefore;
+        const finalDue = openingBalanceCarried + totalAmount + extraAmount + state.settings.deliveryCharge - paidDuring;
 
         const existing = state.bills.find(
           (b) => b.customerId === customerId && b.periodFrom === from && b.periodTo === to
@@ -380,6 +639,8 @@ export const useDairyStore = create<DairyState>()(
           periodTo: to,
           totalQty,
           totalAmount,
+          extraQty,
+          extraAmount,
           deliveryCharge: state.settings.deliveryCharge,
           openingBalanceCarried,
           amountPaidDuringPeriod: paidDuring,
@@ -428,15 +689,104 @@ export const useDairyStore = create<DairyState>()(
 
       saveSettings: (s) => set({ settings: s }),
 
-      resetAll: () => set({
-        customers: initialCustomers,
-        deliveries: seedDeliveries(initialCustomers),
-        payments: seedPayments(),
-        bills: [],
-        settings: DEFAULT_SETTINGS,
-        lastAutoDeliveryDate: null,
-        lastBillingRunDate: null,
-      }),
+      resetAll: () => {
+        const customers = seedCustomers();
+        set({
+          customers,
+          deliveries: seedDeliveries(customers),
+          extraDeliveries: [],
+          payments: seedPayments(),
+          bills: [],
+          cows: seedCows(),
+          inseminations: seedInseminations(),
+          feedEntries: seedFeedEntries(),
+          inAppNotifications: [],
+          settings: DEFAULT_SETTINGS,
+          lastAutoDeliveryDate: null,
+          lastBillingRunDate: null,
+        });
+      },
+
+      // ── Cow actions ──────────────────────────────────────────────────────────
+
+      saveCow: (c) => set((state) => ({
+        cows: state.cows.some((x) => x.id === c.id)
+          ? state.cows.map((x) => (x.id === c.id ? c : x))
+          : [...state.cows, c],
+      })),
+
+      deleteCow: (id) => set((state) => ({
+        cows: state.cows.filter((c) => c.id !== id),
+        inseminations: state.inseminations.filter((i) => i.cowId !== id),
+      })),
+
+      saveInsemination: (ins) => set((state) => ({
+        inseminations: state.inseminations.some((x) => x.id === ins.id)
+          ? state.inseminations.map((x) => (x.id === ins.id ? ins : x))
+          : [...state.inseminations, ins],
+      })),
+
+      deleteInsemination: (id) => set((state) => ({
+        inseminations: state.inseminations.filter((i) => i.id !== id),
+      })),
+
+      markCalvingDelivered: (inseminationId, actualDate) => set((state) => ({
+        inseminations: state.inseminations.map((i) =>
+          i.id === inseminationId ? { ...i, actualCalvingDate: actualDate } : i
+        ),
+      })),
+
+      markReminderSent: (inseminationId, interval) => set((state) => ({
+        inseminations: state.inseminations.map((i) =>
+          i.id === inseminationId
+            ? { ...i, remindersSent: [...i.remindersSent, interval] }
+            : i
+        ),
+      })),
+
+      // ── Feed actions ─────────────────────────────────────────────────────────
+
+      saveFeedEntry: (e) => set((state) => ({
+        feedEntries: state.feedEntries.some((x) => x.id === e.id)
+          ? state.feedEntries.map((x) => (x.id === e.id ? e : x))
+          : [...state.feedEntries, e],
+      })),
+
+      deleteFeedEntry: (id) => set((state) => ({
+        feedEntries: state.feedEntries.filter((e) => e.id !== id),
+      })),
+
+      recordFeedPayment: (feedEntryId, amount) => set((state) => ({
+        feedEntries: state.feedEntries.map((e) => {
+          if (e.id !== feedEntryId) return e;
+          const newPaid = Math.min(e.totalCost, e.paidAmount + amount);
+          const newRemaining = Math.max(0, e.totalCost - newPaid);
+          const newStatus: FeedPaymentStatus =
+            newRemaining === 0 ? "paid" : newPaid > 0 ? "partial" : "due";
+          return { ...e, paidAmount: newPaid, remainingAmount: newRemaining, paymentStatus: newStatus };
+        }),
+      })),
+
+      // ── In-app notification actions ───────────────────────────────────────────
+
+      addInAppNotification: (n) => set((state) => ({
+        inAppNotifications: [
+          { ...n, id: uid(), read: false, createdAt: new Date().toISOString() },
+          ...state.inAppNotifications,
+        ].slice(0, 100), // keep last 100 notifications
+      })),
+
+      markNotificationRead: (id) => set((state) => ({
+        inAppNotifications: state.inAppNotifications.map((n) =>
+          n.id === id ? { ...n, read: true } : n
+        ),
+      })),
+
+      markAllNotificationsRead: () => set((state) => ({
+        inAppNotifications: state.inAppNotifications.map((n) => ({ ...n, read: true })),
+      })),
+
+      clearNotifications: () => set({ inAppNotifications: [] }),
     }),
     {
       name: 'dairy-storage',
@@ -456,9 +806,13 @@ export function isAutoMarked(state: DairyState, customerId: string, date: string
 }
 
 export function milkOn(state: DairyState, date: string) {
-  return state.deliveries
+  const regular = state.deliveries
     .filter((x) => x.date === date && x.status === "delivered")
     .reduce((s, x) => s + x.qty, 0);
+  const extra = (state.extraDeliveries || [])
+    .filter((x) => x.date === date)
+    .reduce((s, x) => s + x.qty, 0);
+  return regular + extra;
 }
 
 export function collectionOn(state: DairyState, date: string) {
@@ -470,7 +824,7 @@ export function money0(n: number) {
 }
 
 export function customerBilled(state: DairyState, customerId: string, from?: string, to?: string) {
-  return state.deliveries
+  const regular = state.deliveries
     .filter(
       (x) =>
         x.customerId === customerId &&
@@ -479,6 +833,17 @@ export function customerBilled(state: DairyState, customerId: string, from?: str
         (!to || x.date <= to),
     )
     .reduce((s, x) => s + x.qty * x.rate, 0);
+
+  const extra = (state.extraDeliveries || [])
+    .filter(
+      (x) =>
+        x.customerId === customerId &&
+        (!from || x.date >= from) &&
+        (!to || x.date <= to),
+    )
+    .reduce((s, x) => s + x.qty * x.rate, 0);
+
+  return regular + extra;
 }
 
 export function customerPaid(state: DairyState, customerId: string, from?: string, to?: string) {
@@ -505,4 +870,54 @@ export function milkTypeLabel(type: MilkType): string {
     custom: 'Custom',
   };
   return map[type];
+}
+
+export function cowStatusLabel(status: CowStatus): string {
+  const map: Record<CowStatus, string> = {
+    active: 'Active',
+    dry: 'Dry',
+    pregnant: 'Pregnant',
+    sold: 'Sold',
+    deceased: 'Deceased',
+  };
+  return map[status];
+}
+
+export function feedPaymentStatusLabel(status: FeedPaymentStatus): string {
+  const map: Record<FeedPaymentStatus, string> = {
+    paid: 'Paid',
+    partial: 'Partial',
+    due: 'Due',
+  };
+  return map[status];
+}
+
+/**
+ * Returns all inseminations where calving is upcoming (actualCalvingDate not set),
+ * sorted by nearest expected calving date.
+ */
+export function upcomingCalvings(state: DairyState): Array<{
+  insemination: Insemination;
+  cow: Cow;
+  daysRemaining: number;
+}> {
+  const results: Array<{ insemination: Insemination; cow: Cow; daysRemaining: number }> = [];
+  for (const ins of (state.inseminations || [])) {
+    if (ins.actualCalvingDate) continue; // already delivered
+    const cow = (state.cows || []).find((c) => c.id === ins.cowId);
+    if (!cow) continue;
+    const daysRemaining = daysUntilCalving(ins.expectedCalvingDate);
+    results.push({ insemination: ins, cow, daysRemaining });
+  }
+  return results.sort((a, b) => a.daysRemaining - b.daysRemaining);
+}
+
+/** Total outstanding feed payments. */
+export function totalFeedOutstanding(state: DairyState): number {
+  return (state.feedEntries || []).reduce((s, e) => s + e.remainingAmount, 0);
+}
+
+/** Unread in-app notification count. */
+export function unreadNotificationCount(state: DairyState): number {
+  return (state.inAppNotifications || []).filter((n) => !n.read).length;
 }
