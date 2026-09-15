@@ -27,7 +27,8 @@ import { TabBar } from '@/constants/theme';
  */
 export function useTabBarHeight(): number {
   const insets = useSafeAreaInsets();
-  return TabBar.height + insets.bottom;
+  const floatBottom = Math.max(insets.bottom, 16);
+  return TabBar.height + floatBottom;
 }
 
 /**

@@ -232,7 +232,7 @@ function StatTile({ label, value }: { label: string; value: string }) {
 
 function ActionBar({ children }: { children: React.ReactNode }) {
   const offset = useScreenPadding();
-  return <View style={[styles.actionBar, { bottom: offset - 16 }]}>{children}</View>;
+  return <View style={[styles.actionBar, { bottom: offset }]}>{children}</View>;
 }
 
 const styles = StyleSheet.create({

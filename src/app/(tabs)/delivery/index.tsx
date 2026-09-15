@@ -297,9 +297,9 @@ function ActionBar({ children }: { children: React.ReactNode }) {
     <View
       style={[
         styles.actionBar,
-        // `useScreenPadding` already includes the safe-area inset, so the bar
-        // clears the home indicator without any hardcoded padding.
-        { bottom: offset - 16 },
+        // `useScreenPadding` already includes the safe-area inset and a 16px
+        // gap above the tab bar, so this perfectly offsets the action bar.
+        { bottom: offset },
       ]}
     >
       {children}
