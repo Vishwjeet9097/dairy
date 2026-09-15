@@ -21,6 +21,7 @@ export {
 export { Dialog, type DialogProps } from './dialog';
 export { Badge, EmptyState, LoadingState, type BadgeTone } from './feedback';
 export { Field, SearchField, type FieldProps } from './field';
+export { AppGlassMaterial, type AppGlassMaterialProps, type GlassLevel } from './glass';
 export { Screen, type ScreenProps } from './screen';
 export { Sparkline, type SparklineProps } from './sparkline';
 export {

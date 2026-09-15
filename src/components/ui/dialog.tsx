@@ -21,8 +21,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Button } from '@/components/ui/button';
+import { AppGlassMaterial } from '@/components/ui/glass';
 import { DialogTransition, Duration } from '@/constants/motion';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
+
+const AnimatedGlass = Animated.createAnimatedComponent(AppGlassMaterial);
 
 export interface DialogProps {
   visible: boolean;
@@ -79,7 +82,7 @@ export function Dialog({
         exiting={FadeOut.duration(Duration.fast)}
         style={styles.backdrop}
       >
-        <Animated.View style={[styles.card, cardStyle]}>
+        <AnimatedGlass level="elevated" style={[styles.card, cardStyle]}>
           {Icon ? (
             <View
               style={[
@@ -114,7 +117,7 @@ export function Dialog({
               style={styles.action}
             />
           </View>
-        </Animated.View>
+        </AnimatedGlass>
       </Animated.View>
     </Modal>
   );
@@ -131,16 +134,11 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxWidth: 380,
-    backgroundColor: Colors.card,
     borderRadius: Radius.xxl,
     padding: 24,
     alignItems: 'center',
     gap: 8,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 32,
-    elevation: 24,
+    overflow: 'hidden',
   },
   icon: {
     width: 52,

@@ -30,8 +30,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppGlassMaterial } from '@/components/ui/glass';
 import { Duration, SheetTransition } from '@/constants/motion';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
+
+const AnimatedGlass = Animated.createAnimatedComponent(AppGlassMaterial);
 
 const { dismissDistanceRatio, dismissVelocity } = SheetTransition;
 
@@ -130,7 +133,8 @@ export function BottomSheet({
         </Animated.View>
 
         <GestureDetector gesture={pan}>
-          <Animated.View
+          <AnimatedGlass
+            level="elevated"
             onLayout={(event) => {
               sheetHeight.value = event.nativeEvent.layout.height;
             }}
@@ -143,7 +147,7 @@ export function BottomSheet({
             {dismissible ? <View style={styles.grabber} /> : null}
             {title ? <Text style={styles.title}>{title}</Text> : null}
             {children}
-          </Animated.View>
+          </AnimatedGlass>
         </GestureDetector>
       </View>
     </Modal>
@@ -161,16 +165,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(17, 24, 39, 0.4)',
   },
   sheet: {
-    backgroundColor: Colors.card,
     borderTopLeftRadius: Radius.xxl,
     borderTopRightRadius: Radius.xxl,
     paddingHorizontal: Layout.gutter,
     paddingTop: 10,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 24,
-    elevation: 16,
+    overflow: 'hidden',
   },
   grabber: {
     width: 40,

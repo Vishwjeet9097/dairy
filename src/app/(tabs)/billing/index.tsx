@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
   },
   overlap: {
     paddingHorizontal: Layout.gutter,
-    marginTop: -22,
   },
   headerIcon: {
     width: 46,

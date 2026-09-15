@@ -1,5 +1,5 @@
 import '@/global.css';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 /**
  * Static B&W palette. Screens pull dynamic accent from useAppTheme() instead.
@@ -223,4 +223,38 @@ export const AppBarMetrics = {
   height: 52,
   /** Circular back / action button size */
   action: 38,
+} as const;
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * GLASS DESIGN TOKENS
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+export const GlassTokens = {
+  // Level 1: Light & Highly Transparent (Secondary controls, small badges)
+  light: {
+    intensity: 15,
+    tint: 'light' as const,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    elevation: 0,
+  },
+  // Level 2: Standard (Bottom nav, app bars, floating toolbars)
+  standard: {
+    intensity: 30,
+    tint: 'light' as const,
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    ...floatingShadow,
+  },
+  // Level 3: Elevated (Modals, bottom sheets)
+  elevated: {
+    intensity: 60,
+    tint: 'light' as const,
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    ...elevatedShadow,
+  },
 } as const;

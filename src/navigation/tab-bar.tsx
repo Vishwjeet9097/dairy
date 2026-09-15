@@ -46,19 +46,17 @@ import { isFullScreenWorkflow } from './route-utils';
 
 const INACTIVE_TINT = TabBarMetrics.inactiveTint;
 
+import { AppGlassMaterial } from '@/components/ui/glass';
+
 export function AppTabBar({ state, navigation, insets }: BottomTabBarProps) {
   const t = useT();
   const { accent } = useAppTheme();
 
-  /**
-   * Derived synchronously from navigation state, so the bar starts leaving on
-   * the same frame the full-screen route starts entering. Nothing to flicker.
-   */
   const hidden = isFullScreenWorkflow(state);
 
-  // The bar's own height plus whatever the device reserves at the bottom
-  // (home indicator, gesture pill, or nothing on older Android).
-  const barHeight = TabBarMetrics.height + insets.bottom;
+  // For a floating pill, the "safe area" margin is derived from insets
+  const floatBottom = Math.max(insets.bottom, 16);
+  const barHeight = TabBarMetrics.height + floatBottom;
 
   const hideProgress = useSharedValue(hidden ? 1 : 0);
 
@@ -67,8 +65,6 @@ export function AppTabBar({ state, navigation, insets }: BottomTabBarProps) {
   }, [hidden, hideProgress]);
 
   const containerStyle = useAnimatedStyle(() => ({
-    // Slide fully off-screen, plus a partial fade so it reads as "stepping
-    // aside" rather than being yanked down.
     transform: [{ translateY: hideProgress.value * barHeight }],
     opacity: 1 - hideProgress.value * 0.35,
   }));
@@ -82,58 +78,53 @@ export function AppTabBar({ state, navigation, insets }: BottomTabBarProps) {
 
   return (
     <Animated.View
-      // Not just visually hidden — unreachable, so a stray tap during a
-      // transition can't switch tabs out from under a full-screen form.
       pointerEvents={hidden ? 'none' : 'auto'}
       accessibilityElementsHidden={hidden}
       importantForAccessibility={hidden ? 'no-hide-descendants' : 'auto'}
       style={[
         styles.container,
         {
-          height: barHeight,
-          paddingBottom: insets.bottom,
-          // Respect landscape / notched side insets too.
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
+          bottom: floatBottom,
+          left: Math.max(insets.left, 16),
+          right: Math.max(insets.right, 16),
         },
         containerStyle,
       ]}
     >
-      <View accessibilityRole="tablist" style={styles.row}>
-        {visibleTabs.map(({ route, index, definition }) => {
-          const focused = state.index === index;
+      <AppGlassMaterial level="standard" style={styles.glassContainer}>
+        <View accessibilityRole="tablist" style={styles.row}>
+          {visibleTabs.map(({ route, index, definition }) => {
+            const focused = state.index === index;
 
-          return (
-            <TabItem
-              key={route.key}
-              definition={definition}
-              focused={focused}
-              activeColor={accent.color}
-              activePillColor={accent.soft}
-              t={t}
-              position={index + 1}
-              total={visibleTabs.length}
-              onPress={() => {
-                // Emitted even when already focused — see the header comment.
-                const event = navigation.emit({
-                  type: 'tabPress',
-                  target: route.key,
-                  canPreventDefault: true,
-                });
+            return (
+              <TabItem
+                key={route.key}
+                definition={definition}
+                focused={focused}
+                activeColor={accent.color}
+                activePillColor={accent.soft}
+                t={t}
+                position={index + 1}
+                total={visibleTabs.length}
+                onPress={() => {
+                  const event = navigation.emit({
+                    type: 'tabPress',
+                    target: route.key,
+                    canPreventDefault: true,
+                  });
 
-                if (!focused && !event.defaultPrevented) {
-                  // `navigate`, not `push`: focuses the existing tab and leaves
-                  // its nested stack exactly where the user left it.
-                  navigation.navigate(route.name, route.params);
-                }
-              }}
-              onLongPress={() => {
-                navigation.emit({ type: 'tabLongPress', target: route.key });
-              }}
-            />
-          );
-        })}
-      </View>
+                  if (!focused && !event.defaultPrevented) {
+                    navigation.navigate(route.name, route.params);
+                  }
+                }}
+                onLongPress={() => {
+                  navigation.emit({ type: 'tabLongPress', target: route.key });
+                }}
+              />
+            );
+          })}
+        </View>
+      </AppGlassMaterial>
     </Animated.View>
   );
 }
@@ -241,26 +232,19 @@ function TabItem({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: Colors.card,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: Colors.border,
-    // Above scroll content, below modals.
+    // Z-index ensures it sits above lists
     zIndex: 50,
-    elevation: 8,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
+  },
+  glassContainer: {
+    borderRadius: Radius.full,
+    overflow: 'hidden',
   },
   row: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     paddingHorizontal: 4,
+    height: TabBarMetrics.height,
   },
   item: {
     flex: 1,

@@ -49,6 +49,7 @@ import {
   SectionHeading,
   Sparkline,
 } from '@/components/ui';
+import { AppGlassMaterial } from '@/components/ui/glass';
 import {
   cardBorder,
   cardShadow,
@@ -232,16 +233,17 @@ export default function HomeScreen() {
                 ? `${stats.pending} deliveries pending`
                 : 'All deliveries done'
             }
-            style={styles.bell}
           >
-            <Bell size={20} color={Colors.foreground} />
-            {stats.pending > 0 ? (
-              <View style={styles.bellDot}>
-                <Text style={styles.bellCount} allowFontScaling={false}>
-                  {stats.pending > 9 ? '9+' : stats.pending}
-                </Text>
-              </View>
-            ) : null}
+            <AppGlassMaterial level="standard" style={styles.bell}>
+              <Bell size={20} color={Colors.foreground} />
+              {stats.pending > 0 ? (
+                <View style={styles.bellDot}>
+                  <Text style={styles.bellCount} allowFontScaling={false}>
+                    {stats.pending > 9 ? '9+' : stats.pending}
+                  </Text>
+                </View>
+              ) : null}
+            </AppGlassMaterial>
           </PressableScale>
         </View>
 
@@ -307,9 +309,9 @@ export default function HomeScreen() {
                   style={styles.hero}
                 >
                   <View style={styles.heroBody}>
-                    <View style={styles.heroChip}>
+                    <AppGlassMaterial level="light" style={styles.heroChip}>
                       <Text style={styles.heroChipText}>{dateLabel}</Text>
-                    </View>
+                    </AppGlassMaterial>
 
                     <Text style={styles.heroLabel}>{t('label.pendingDeliveries')}</Text>
 
@@ -332,16 +334,15 @@ export default function HomeScreen() {
                     </View>
 
                     <PressableScale
-                      // `navigate`, not `push`: Delivery is a tab root, so this
-                      // switches to it rather than stacking a copy on Home.
                       onPress={() => nav.navigate('/delivery')}
                       accessibilityRole="button"
                       accessibilityLabel="Start delivery"
-                      style={styles.heroCta}
                     >
-                      <Truck size={16} color="white" />
-                      <Text style={styles.heroCtaText}>{t('action.startDelivery')}</Text>
-                      <ChevronRight size={14} color="rgba(255,255,255,0.85)" />
+                      <AppGlassMaterial level="light" style={styles.heroCta}>
+                        <Truck size={16} color="white" />
+                        <Text style={styles.heroCtaText}>{t('action.startDelivery')}</Text>
+                        <ChevronRight size={14} color="rgba(255,255,255,0.85)" />
+                      </AppGlassMaterial>
                     </PressableScale>
                   </View>
 
@@ -681,9 +682,6 @@ const styles = StyleSheet.create({
     borderRadius: Radius.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.card,
-    ...cardBorder,
-    ...softShadow,
   },
   bellDot: {
     position: 'absolute',
@@ -735,7 +733,6 @@ const styles = StyleSheet.create({
   },
   heroChip: {
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: Radius.full,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -794,9 +791,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.35)',
     borderRadius: Radius.md,
     paddingHorizontal: 16,
     paddingVertical: 10,

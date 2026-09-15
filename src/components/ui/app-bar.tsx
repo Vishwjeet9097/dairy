@@ -22,6 +22,8 @@ import { useAppTheme } from '@/context/theme-context';
 import { useT } from '@/lib/i18n';
 import { useNavGuard } from '@/navigation/use-nav-guard';
 
+import { AppGlassMaterial } from './glass';
+
 /* ─── AppBar ─────────────────────────────────────────────────────────────── */
 
 export interface AppBarProps {
@@ -50,7 +52,8 @@ export function AppBar({
   const t = useT();
 
   return (
-    <View
+    <AppGlassMaterial
+      level="standard"
       style={[
         styles.appBar,
         { paddingTop: insets.top, height: AppBarMetrics.height + insets.top },
@@ -84,7 +87,7 @@ export function AppBar({
 
         <View style={[styles.appBarSide, styles.appBarSideRight]}>{right}</View>
       </View>
-    </View>
+    </AppGlassMaterial>
   );
 }
 
@@ -110,18 +113,19 @@ export function ScreenHeader({
   subtitle,
   action,
   children,
-  bottomInset = 40,
+  bottomInset = 16,
   style,
 }: ScreenHeaderProps) {
   const insets = useSafeAreaInsets();
   const { accent } = useAppTheme();
 
   return (
-    <View
+    <AppGlassMaterial
+      level="standard"
+      tintColor={accent.header + 'E6'} // 90% opacity for glass refraction
       style={[
         styles.header,
         {
-          backgroundColor: accent.header,
           paddingTop: insets.top + 12,
           paddingBottom: bottomInset,
         },
@@ -143,7 +147,7 @@ export function ScreenHeader({
       </View>
 
       {children ? <View style={styles.headerChildren}>{children}</View> : null}
-    </View>
+    </AppGlassMaterial>
   );
 }
 
@@ -175,10 +179,8 @@ export function HeaderAction({
 
 const styles = StyleSheet.create({
   appBar: {
-    backgroundColor: Colors.card,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
-    ...softShadow,
   },
   appBarRow: {
     flex: 1,
@@ -215,6 +217,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Layout.gutter,
     borderBottomLeftRadius: Radius.xxl,
     borderBottomRightRadius: Radius.xxl,
+    overflow: 'hidden',
     ...softShadow,
   },
   headerRow: {
