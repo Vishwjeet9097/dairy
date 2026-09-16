@@ -24,21 +24,10 @@ import {
   Wallet,
 } from 'lucide-react-native';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AnimatedValueText, useFeedback } from '@/components/motion';
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  BottomFog,
-  Button,
-  Card,
-  EmptyState,
-  IconButton,
-  NavRow,
-  Screen,
-} from '@/components/ui';
+import { AppBar, Avatar, Badge, BottomFog, Button, Card, EmptyState, IconButton, NavRow, Screen, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type, cardBorder } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import {

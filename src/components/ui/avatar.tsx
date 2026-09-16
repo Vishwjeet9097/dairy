@@ -6,7 +6,8 @@
  * device cannot push the initial outside the circle.
  */
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Text } from '@/components/ui';
 
 import { Radius } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';

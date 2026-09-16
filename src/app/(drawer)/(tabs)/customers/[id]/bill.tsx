@@ -22,22 +22,11 @@ import {
   X,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedValueText, PressableScale, useFeedback } from '@/components/motion';
-import {
-  AppBar,
-  Avatar,
-  Badge,
-  BottomSheet,
-  Button,
-  Card,
-  Divider,
-  EmptyState,
-  Screen,
-  SectionLabel,
-} from '@/components/ui';
+import { AppBar, Avatar, Badge, BottomSheet, Button, Card, Divider, EmptyState, Screen, SectionLabel, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import {

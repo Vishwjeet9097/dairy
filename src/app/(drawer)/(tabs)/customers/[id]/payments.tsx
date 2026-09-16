@@ -18,16 +18,10 @@ import {
   Wallet,
 } from 'lucide-react-native';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ListItem } from '@/components/motion';
-import {
-  AppBar,
-  Button,
-  Card,
-  EmptyState,
-  Screen,
-} from '@/components/ui';
+import { AppBar, Button, Card, EmptyState, Screen, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import { money0, useDairyStore, type PaymentMethod } from '@/lib/dairy-store';

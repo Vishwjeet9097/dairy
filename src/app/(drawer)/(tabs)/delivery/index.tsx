@@ -15,7 +15,7 @@ import { DrawerToggleButton } from 'expo-router/drawer';
 import { useScrollToTop } from 'expo-router';
 import { Calendar, Check, ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   AnimatedValueText,
@@ -23,18 +23,7 @@ import {
   StatusToggle,
   useFeedback,
 } from '@/components/motion';
-import {
-  Avatar,
-  BottomFog,
-  Button,
-  Card,
-  EmptyState,
-  IconButton,
-  Screen,
-  ScreenHeader,
-  SearchField,
-  Segmented,
-} from '@/components/ui';
+import { Avatar, BottomFog, Button, Card, EmptyState, IconButton, Screen, ScreenHeader, SearchField, Segmented, TopFog, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type, softShadow } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import {
@@ -273,7 +262,9 @@ export default function DeliveryScreen() {
         </View>
       </ScrollView>
 
+      <TopFog />
       <BottomFog />
+
       {/*
         Pinned above the tab bar rather than at the screen bottom, so the two
         pieces of chrome stack instead of overlapping.

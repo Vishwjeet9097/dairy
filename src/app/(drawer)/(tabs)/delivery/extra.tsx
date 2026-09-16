@@ -17,20 +17,11 @@ import {
   X,
 } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PressableScale, useFeedback } from '@/components/motion';
-import {
-  AppBar,
-  Avatar,
-  Button,
-  Card,
-  Field,
-  Screen,
-  SectionLabel,
-  Segmented,
-} from '@/components/ui';
+import { AppBar, Avatar, Button, Card, Field, Screen, SectionLabel, Segmented, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import {

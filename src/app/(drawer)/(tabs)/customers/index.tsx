@@ -9,21 +9,11 @@
 import { useScrollToTop } from 'expo-router';
 import { ChevronRight, Phone, UserPlus, Users } from 'lucide-react-native';
 import { useMemo, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AnimatedValueText, ListItem } from '@/components/motion';
 import { DrawerToggleButton } from 'expo-router/drawer';
-import {
-  Avatar,
-  Badge,
-  Button,
-  EmptyState,
-  HeaderAction,
-  PressableCard,
-  Screen,
-  ScreenHeader,
-  SearchField,
-} from '@/components/ui';
+import { Avatar, Badge, BottomFog, Button, EmptyState, HeaderAction, PressableCard, Screen, ScreenHeader, TopFog, SearchField, Text } from '@/components/ui';
 import { Colors, Layout, Type } from '@/constants/theme';
 import { money0, outstanding, useDairyStore } from '@/lib/dairy-store';
 import { useT } from '@/lib/i18n';
@@ -92,6 +82,8 @@ export default function CustomersScreen() {
           placeholder={t('placeholder.searchNameOrPhone')}
         />
       </ScreenHeader>
+
+      <TopFog />
 
       <ScrollView
         ref={scrollRef}
@@ -171,6 +163,7 @@ export default function CustomersScreen() {
           ) : null}
         </View>
       </ScrollView>
+      <BottomFog />
     </Screen>
   );
 }

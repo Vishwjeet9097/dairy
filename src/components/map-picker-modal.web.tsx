@@ -3,10 +3,10 @@
  * react-native-maps does not support web out of the box without additional setup.
  * This mock ensures Metro doesn't crash when bundling for web.
  */
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, IconButton } from '@/components/ui';
+import { Button, IconButton, Text } from '@/components/ui';
 import { Colors, Layout, Type } from '@/constants/theme';
 import { X } from 'lucide-react-native';
 

@@ -16,20 +16,12 @@
 
 import { Home, IndianRupee, Milk, Phone, User, X, Zap } from 'lucide-react-native';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import MapPickerModal from '@/components/map-picker-modal';
 import { PressableScale, useFeedback } from '@/components/motion';
-import {
-  AppBar,
-  Button,
-  Card,
-  Field,
-  Screen,
-  SectionLabel,
-  ToggleRow,
-} from '@/components/ui';
+import { AppBar, Button, Card, Field, Screen, SectionLabel, ToggleRow, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import { milkTypeLabel, uid, useDairyStore, type MilkType } from '@/lib/dairy-store';

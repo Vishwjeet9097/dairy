@@ -8,7 +8,8 @@
 
 import type { LucideIcon } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Text } from '@/components/ui';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Duration } from '@/constants/motion';
@@ -116,14 +117,19 @@ export function LoadingState({ label }: { label?: string }) {
 const styles = StyleSheet.create({
   badge: {
     borderRadius: Radius.full,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 3,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   badgeLabel: {
     ...Type.micro,
     fontWeight: '800',
     letterSpacing: 0.3,
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   emptyState: {
     backgroundColor: Colors.card,

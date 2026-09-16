@@ -1,10 +1,10 @@
 import { Drawer, DrawerContentScrollView } from 'expo-router/drawer';
-import { Settings, FileText, Beef, Wheat, X, LogOut, ChevronRight, HelpCircle, Phone, FileSignature } from 'lucide-react-native';
+import { Settings, FileText, X, LogOut, ChevronRight, HelpCircle, Phone, FileSignature, Truck, ReceiptText } from 'lucide-react-native';
 import React from 'react';
-import { Platform, StyleSheet, Text, View, Pressable, Dimensions } from 'react-native';
+import { Platform, StyleSheet, View, Pressable, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Avatar } from '@/components/ui';
+import { Avatar, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type, softShadow, cardShadow } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import { useT } from '@/lib/i18n';
@@ -25,6 +25,7 @@ function CustomDrawerContent(props: any) {
   const settings = useDairyStore(s => s.settings);
 
   const isSelected = (path: string) => {
+    if (!pathname) return false;
     if (path === '/' && pathname === '/') return true;
     if (path !== '/' && pathname.startsWith(path)) return true;
     return false;
@@ -36,22 +37,19 @@ function CustomDrawerContent(props: any) {
 
   const navGroups = [
     {
-      title: 'DAIRY MANAGEMENT',
-      icon: Beef,
+      title: t('drawer.dairyManagement'),
+      icon: Truck,
       items: [
-        { label: 'Herd Management', desc: 'Manage your livestock', icon: Beef, path: '/cows', color: '#EF4444', bg: '#FEE2E2' },
-        { label: 'Feed & Nutrition', desc: 'Track feed and health', icon: Wheat, path: '/feed', color: '#10B981', bg: '#D1FAE5' },
-        { label: 'Reports', desc: 'View analytics & reports', icon: FileText, path: '/reports', color: '#6366F1', bg: '#E0E7FF' },
+        { label: t('nav.delivery'), desc: t('drawer.deliveryDesc'), icon: Truck, path: '/delivery', color: '#EF4444', bg: '#FEE2E2' },
+        { label: t('nav.billing'), desc: t('drawer.billingDesc'), icon: ReceiptText, path: '/billing', color: '#10B981', bg: '#D1FAE5' },
+        { label: t('title.reports'), desc: t('drawer.reportsDesc'), icon: FileText, path: '/reports', color: '#6366F1', bg: '#E0E7FF' },
       ],
     },
     {
-      title: 'SUPPORT & SETTINGS',
+      title: t('drawer.supportSettings'),
       icon: Settings,
       items: [
-        { label: 'Settings', desc: 'App & account preferences', icon: Settings, path: '/settings', color: '#3B82F6', bg: '#DBEAFE' },
-        { label: "FAQ's", desc: 'Find quick answers', icon: HelpCircle, path: '/faq', color: '#8B5CF6', bg: '#EDE9FE' },
-        { label: 'Contact Us', desc: "We're here to help", icon: Phone, path: '/contact', color: '#10B981', bg: '#D1FAE5' },
-        { label: 'Terms & Conditions', desc: 'Read our policies', icon: FileSignature, path: '/terms', color: '#F59E0B', bg: '#FEF3C7' },
+        { label: t('title.settings'), desc: t('drawer.settingsDesc'), icon: Settings, path: '/settings', color: '#3B82F6', bg: '#DBEAFE' },
       ],
     }
   ];
@@ -66,7 +64,7 @@ function CustomDrawerContent(props: any) {
         style={StyleSheet.absoluteFill}
       />
 
-      <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 40 }}>
+      <DrawerContentScrollView {...props} contentContainerStyle={{ paddingTop: insets.top + 20, paddingBottom: 20 }}>
         
         {/* Header Area */}
         <View style={styles.header}>
@@ -83,7 +81,7 @@ function CustomDrawerContent(props: any) {
             <View style={styles.profileText}>
               <Text style={styles.userName} numberOfLines={1}>{settings.dairyName}</Text>
               <View style={styles.viewProfileRow}>
-                <Text style={styles.userRole}>View my Profile</Text>
+                <Text style={styles.userRole}>{t('drawer.viewProfile')}</Text>
                 <ChevronRight size={14} color={Colors.mutedForeground} />
               </View>
             </View>
@@ -133,22 +131,22 @@ function CustomDrawerContent(props: any) {
           ))}
         </View>
 
-        {/* Logout Footer inside scrollview for exact reference match */}
-        <View style={styles.logoutContainer}>
-          <Pressable>
-            {({ pressed }) => (
-              <View style={[styles.logoutBtn, pressed && { opacity: 0.7 }]}>
-                <LogOut size={22} color="#E11D48" strokeWidth={2.5} />
-                <View style={styles.logoutDivider} />
-                <Text style={styles.logoutText}>Log Out</Text>
-                <View style={{ flex: 1 }} />
-                <ChevronRight size={18} color="#94A3B8" />
-              </View>
-            )}
-          </Pressable>
-        </View>
-
       </DrawerContentScrollView>
+
+      {/* Logout Footer pinned to the bottom of the screen */}
+      <View style={[styles.logoutContainer, { paddingBottom: Math.max(insets.bottom + 20, 20) }]}>
+        <Pressable>
+          {({ pressed }) => (
+            <View style={[styles.logoutBtn, pressed && { opacity: 0.7 }]}>
+              <LogOut size={22} color="#E11D48" strokeWidth={2.5} />
+              <View style={styles.logoutDivider} />
+              <Text style={styles.logoutText}>{t('drawer.logOut')}</Text>
+              <View style={{ flex: 1 }} />
+              <ChevronRight size={18} color="#94A3B8" />
+            </View>
+          )}
+        </Pressable>
+      </View>
     </View>
   );
 }

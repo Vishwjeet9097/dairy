@@ -3,43 +3,46 @@ import { GlassView } from 'expo-glass-effect';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Colors } from '@/constants/theme';
 
-export function BottomFog() {
+export function TopFog() {
+  const insets = useSafeAreaInsets();
+  
   return (
     <View
       pointerEvents="none"
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 130,
-        zIndex: 10, // Must be below ActionBars (which use 40) but above ScrollView
-      }}
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          bottom: 'auto',
+          // Make it just tall enough to cover the status bar + a slight fade area
+          height: Math.max(insets.top + 30, 80),
+          zIndex: 50, // Sits above scroll content
+        },
+      ]}
     >
       {Platform.OS === 'ios' ? (
         <MaskedView
           style={StyleSheet.absoluteFill}
           maskElement={
             <LinearGradient
-              colors={['transparent', 'rgba(0,0,0,0.8)']}
-              locations={[0, 0.4]}
+              colors={['rgba(0,0,0,1)', 'transparent']}
+              locations={[0.5, 1]}
               style={StyleSheet.absoluteFill}
             />
           }
         >
+          {/* Light glass effect for apple style subtle blur */}
           <GlassView glassEffectStyle="regular" colorScheme="light" style={StyleSheet.absoluteFill} />
         </MaskedView>
       ) : (
-        <View style={[StyleSheet.absoluteFill, { opacity: 0.8 }]}>
-          <LinearGradient
-            colors={['transparent', Colors.background]}
-            locations={[0, 0.6]}
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
+        <LinearGradient
+          colors={[Colors.background, 'transparent']}
+          locations={[0.3, 1]}
+          style={StyleSheet.absoluteFill}
+        />
       )}
     </View>
   );

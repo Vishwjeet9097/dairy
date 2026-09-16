@@ -18,7 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, useScrollToTop } from 'expo-router';
 import { AlertCircle, Bell, ChevronRight, FileText, IndianRupee, Milk, Truck, UserPlus, Users, Wallet } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -27,17 +27,7 @@ import {
   ListItem,
   PressableScale,
 } from '@/components/motion';
-import {
-  Avatar,
-  Badge,
-  Card,
-  EmptyState,
-  PressableCard,
-  Screen,
-  SearchField,
-  SectionHeading,
-  Sparkline,
-} from '@/components/ui';
+import { Avatar, Badge, BottomFog, Card, EmptyState, PressableCard, Screen, SearchField, SectionHeading, Sparkline, TopFog, Text } from '@/components/ui';
 import { AppGlassMaterial } from '@/components/ui/glass';
 import {
   cardBorder,
@@ -61,6 +51,7 @@ import {
   todayISO,
   totalOutstanding,
   useDairyStore,
+  daysUntilCalving,
 } from '@/lib/dairy-store';
 import { useT } from '@/lib/i18n';
 import { useNavGuard } from '@/navigation/use-nav-guard';
@@ -83,6 +74,8 @@ export default function HomeScreen() {
   const deliveries = useDairyStore((s) => s.deliveries);
   const payments = useDairyStore((s) => s.payments);
   const settings = useDairyStore((s) => s.settings);
+  const cows = useDairyStore((s) => s.cows);
+  const inseminations = useDairyStore((s) => s.inseminations);
 
   const [query, setQuery] = useState('');
   const scrollRef = useRef<ScrollView>(null);
@@ -171,6 +164,20 @@ export default function HomeScreen() {
       .map((c) => ({ customer: c, balance: outstanding(state, c.id) }));
   }, [query, customers, deliveries, payments]);
 
+  /** Nearest upcoming calving */
+  const upcomingCalving = useMemo(() => {
+    const upcoming = inseminations
+      .filter((i) => !i.actualCalvingDate)
+      .map((i) => {
+        const cow = cows.find(c => c.id === i.cowId);
+        const days = daysUntilCalving(i.expectedCalvingDate);
+        return { ...i, cowName: cow?.name || 'Unknown', days };
+      })
+      .filter((i) => i.days <= 30)
+      .sort((a, b) => a.days - b.days);
+    return upcoming[0] || null;
+  }, [inseminations, cows]);
+
   const dateLabel = new Date().toLocaleDateString('en-IN', {
     weekday: 'short',
     day: 'numeric',
@@ -194,6 +201,7 @@ export default function HomeScreen() {
 
   return (
     <Screen>
+      <TopFog />
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={{ paddingBottom }}
@@ -288,6 +296,36 @@ export default function HomeScreen() {
           </View>
         ) : (
           <>
+            {/* ── Upcoming Calving Alert ── */}
+            {upcomingCalving && (
+              <View style={styles.section}>
+                <PressableScale onPress={() => nav.navigate('/cows')}>
+                  <AppGlassMaterial level="elevated" style={{
+                    padding: 16,
+                    borderRadius: Radius.lg,
+                    borderWidth: 1,
+                    borderColor: accent.soft,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}>
+                    <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: accent.soft, alignItems: 'center', justifyContent: 'center' }}>
+                      <AlertCircle size={20} color={accent.color} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ ...Type.bodyStrong, color: Colors.foreground, marginBottom: 2 }}>
+                        {upcomingCalving.cowName} is due soon
+                      </Text>
+                      <Text style={{ ...Type.footnote, color: Colors.mutedForeground }}>
+                        Expected in {upcomingCalving.days} days ({upcomingCalving.expectedCalvingDate})
+                      </Text>
+                    </View>
+                    <ChevronRight size={16} color={Colors.border} />
+                  </AppGlassMaterial>
+                </PressableScale>
+              </View>
+            )}
+
             {/* ── Hero: today's round ── */}
             <View style={styles.section}>
               <View style={styles.heroShadow}>
@@ -567,6 +605,8 @@ export default function HomeScreen() {
           </>
         )}
       </ScrollView>
+      
+      <BottomFog />
     </Screen>
   );
 }

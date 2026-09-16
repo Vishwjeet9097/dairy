@@ -36,3 +36,5 @@ export {
   type NavRowProps,
 } from './surfaces';
 export { Toggle, ToggleRow, type ToggleProps } from './toggle';
+export { TopFog } from './top-fog';
+export { Text } from './text';

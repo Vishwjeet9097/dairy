@@ -19,7 +19,8 @@
 
 import type { ReactNode } from 'react';
 import { useCallback, useEffect } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, StyleSheet, View } from 'react-native';
+import { Text } from '@/components/ui';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -132,7 +133,8 @@ export function BottomSheet({
           />
         </Animated.View>
 
-        <GestureDetector gesture={pan}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.keyboardAvoiding}>
+          <GestureDetector gesture={pan}>
           <AnimatedGlass
             level="elevated"
             onLayout={(event) => {
@@ -140,7 +142,7 @@ export function BottomSheet({
             }}
             style={[
               styles.sheet,
-              { paddingBottom: insets.bottom + Layout.gutter },
+              { paddingBottom: insets.bottom + Layout.gutter, marginTop: insets.top + 10 },
               sheetStyle,
             ]}
           >
@@ -149,6 +151,7 @@ export function BottomSheet({
             {children}
           </AnimatedGlass>
         </GestureDetector>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -156,6 +159,10 @@ export function BottomSheet({
 
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  keyboardAvoiding: {
     flex: 1,
     justifyContent: 'flex-end',
   },
@@ -170,6 +177,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Layout.gutter,
     paddingTop: 10,
     overflow: 'hidden',
+    flexShrink: 1,
   },
   grabber: {
     width: 40,

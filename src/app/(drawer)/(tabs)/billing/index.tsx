@@ -14,19 +14,10 @@ import { DrawerToggleButton } from 'expo-router/drawer';
 import { useScrollToTop } from 'expo-router';
 import { ChevronRight, FileText, ReceiptText, Wallet } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AnimatedValueText, ListItem, PressableScale } from '@/components/motion';
-import {
-  Avatar,
-  Button,
-  Card,
-  Divider,
-  EmptyState,
-  Screen,
-  ScreenHeader,
-  SearchField,
-} from '@/components/ui';
+import { Avatar, Badge, BottomFog, Button, Card, Divider, TopFog, EmptyState, Screen, ScreenHeader, SearchField, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { money0, outstanding, useDairyStore } from '@/lib/dairy-store';
 import { useT } from '@/lib/i18n';
@@ -110,6 +101,8 @@ export default function BillingScreen() {
         />
       </ScreenHeader>
 
+      <TopFog />
+
       <ScrollView
         ref={scrollRef}
         contentContainerStyle={[styles.content, { paddingBottom }]}
@@ -186,6 +179,8 @@ export default function BillingScreen() {
           ) : null}
         </View>
       </ScrollView>
+
+      <BottomFog />
     </Screen>
   );
 }

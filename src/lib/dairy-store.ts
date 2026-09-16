@@ -13,7 +13,8 @@ export type Lang = "en" | "hi";
 export type CowStatus = "active" | "dry" | "pregnant" | "sold" | "deceased";
 export type FeedPaymentStatus = "paid" | "partial" | "due";
 export type NotificationCategory = "delivery" | "billing" | "cow" | "feed" | "system";
-export type FontSize = "small" | "default" | "large" | "xlarge";
+// Base font size in pixels (default 14)
+export type FontSize = number;
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
@@ -114,6 +115,7 @@ export interface Cow {
   photo?: string;       // local file URI
   purchaseDate?: string;
   status: CowStatus;
+  color?: string;
   notes?: string;
   createdAt: string;    // ISO timestamp
 }
@@ -326,7 +328,7 @@ const DEFAULT_SETTINGS: Settings = {
   morningDeliveryTime: "08:00",
   eveningDeliveryTime: "19:00",
   gestationDays: 280,
-  fontSize: "default",
+  fontSize: 14, // default base font size
 };
 
 function seedCustomers(): Customer[] {

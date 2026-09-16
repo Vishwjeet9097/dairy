@@ -11,7 +11,8 @@
  */
 
 import type { LucideIcon } from 'lucide-react-native';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
+import { Text } from '@/components/ui';
 import Animated, {
   FadeIn,
   FadeOut,

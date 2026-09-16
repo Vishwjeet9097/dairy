@@ -11,15 +11,8 @@
 import type { LucideIcon } from 'lucide-react-native';
 import { Search, X } from 'lucide-react-native';
 import { forwardRef, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  type StyleProp,
-  type TextInputProps,
-  type ViewStyle,
-} from 'react-native';
+import { StyleSheet, TextInput, View, type StyleProp, type TextInputProps, type ViewStyle } from 'react-native';
+import { Text } from '@/components/ui';
 
 import { IconButton } from '@/components/ui/button';
 import { Colors, Radius, Type } from '@/constants/theme';

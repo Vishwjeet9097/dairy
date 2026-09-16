@@ -10,7 +10,8 @@
  */
 
 import type { LucideIcon } from 'lucide-react-native';
-import { ActivityIndicator, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Text } from '@/components/ui';
 
 import { PressableScale } from '@/components/motion/pressable-scale';
 import { Colors, Radius, Type } from '@/constants/theme';

@@ -14,17 +14,10 @@
 import { useLocalSearchParams } from 'expo-router';
 import { BookOpen, Milk, UserX, Wallet } from 'lucide-react-native';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ListItem } from '@/components/motion';
-import {
-  AppBar,
-  Badge,
-  Button,
-  Card,
-  EmptyState,
-  Screen,
-} from '@/components/ui';
+import { AppBar, Badge, Button, Card, EmptyState, Screen, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import { money0, useDairyStore } from '@/lib/dairy-store';

@@ -41,7 +41,7 @@ export const SETTINGS_DEFAULTS: Settings = {
   morningDeliveryTime: '08:00',
   eveningDeliveryTime: '19:00',
   gestationDays: 280,
-  fontSize: 'default',
+  fontSize: 14,
 };
 
 export function customer(overrides: Partial<Customer> = {}): Customer {

@@ -31,6 +31,8 @@ import {
   ReceiptText,
   Truck,
   Users,
+  Beef,
+  Wheat,
   type LucideIcon,
 } from 'lucide-react-native';
 
@@ -46,20 +48,11 @@ export interface TabDefinition {
   a11yKey: TranslationKey;
 }
 
-/**
- * Order matters and is authoritative.
- *
- * The tabs layout renders one `<Tabs.Screen>` per entry in this order, and Expo
- * Router's `getSortedChildren` orders the navigator by those declarations rather
- * than by the filesystem. Without them the bar would fall back to alphabetical
- * order (billing before customers), which is not the task-first order we want.
- * The bar itself iterates `state.routes`, so it always agrees with the navigator.
- */
 export const TABS: readonly TabDefinition[] = [
   { name: 'index', labelKey: 'nav.home', a11yKey: 'nav.home', icon: Home },
   { name: 'customers', labelKey: 'nav.customers', a11yKey: 'nav.customers', icon: Users },
-  { name: 'delivery', labelKey: 'nav.delivery', a11yKey: 'nav.delivery', icon: Truck },
-  { name: 'billing', labelKey: 'nav.billing', a11yKey: 'nav.billing', icon: ReceiptText },
+  { name: 'cows', labelKey: 'title.cows', a11yKey: 'title.cows', icon: Beef },
+  { name: 'feed/index', labelKey: 'title.feed', a11yKey: 'title.feed', icon: Wheat },
 ];
 
 /**

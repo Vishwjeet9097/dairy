@@ -11,24 +11,19 @@
  *    beginning with no way to change it, so Hindi was unreachable.
  */
 
-import { Check, IndianRupee, Languages, Palette, Store, Trash2, User } from 'lucide-react-native';
+import { Check, IndianRupee, Languages, Palette, Store, Trash2, User, Minus, Plus } from 'lucide-react-native';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { DrawerToggleButton } from 'expo-router/drawer';
 
 import { PressableScale, useFeedback } from '@/components/motion';
-import {
-  Button,
+import { BottomFog,  Button,
   Card,
   Dialog,
   Field,
-  Screen,
-  ScreenHeader,
-  SectionLabel,
-  Segmented,
-  ToggleRow,
-} from '@/components/ui';
+  IconButton,
+  Screen, ScreenHeader, SectionLabel, Segmented, ToggleRow, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { ACCENT_COLORS, useAppTheme } from '@/context/theme-context';
 import { useDairyStore, type Lang } from '@/lib/dairy-store';
@@ -56,6 +51,7 @@ export default function SettingsScreen() {
   const [deliveryCharge, setDeliveryCharge] = useState(String(settings.deliveryCharge));
   const [autoDelivery, setAutoDelivery] = useState(settings.autoDeliveryDefault);
   const [notifications, setNotifications] = useState(settings.notificationsEnabled);
+  const [fontSize, setFontSize] = useState(settings.fontSize);
   const [resetVisible, setResetVisible] = useState(false);
 
   const handleSave = () => {
@@ -68,6 +64,7 @@ export default function SettingsScreen() {
       deliveryCharge: parseFloat(deliveryCharge) || settings.deliveryCharge,
       autoDeliveryDefault: autoDelivery,
       notificationsEnabled: notifications,
+      fontSize,
     });
     feedback.success(t('success.settingsSaved'));
   };
@@ -114,6 +111,34 @@ export default function SettingsScreen() {
             onChange={setLang}
             style={styles.langSegmented}
           />
+        </Card>
+
+        {/* ── Font Size ── */}
+        <SectionLabel>{t('label.fontSize') || 'Font Size'}</SectionLabel>
+        <Card padding={18} style={styles.card}>
+          <View style={styles.stepperContainer}>
+            <IconButton 
+              icon={Minus} 
+              accessibilityLabel="Decrease font size" 
+              onPress={() => {
+                const newSize = Math.max(14, (typeof fontSize === 'number' ? fontSize : 14) - 2);
+                setFontSize(newSize);
+                saveSettings({ ...settings, fontSize: newSize });
+              }} 
+            />
+            <Text style={styles.stepperValue}>
+              {typeof fontSize === 'number' ? fontSize : 14}px
+            </Text>
+            <IconButton 
+              icon={Plus} 
+              accessibilityLabel="Increase font size" 
+              onPress={() => {
+                const newSize = Math.min(30, (typeof fontSize === 'number' ? fontSize : 14) + 2);
+                setFontSize(newSize);
+                saveSettings({ ...settings, fontSize: newSize });
+              }} 
+            />
+          </View>
         </Card>
 
         {/* ── Theme ── */}
@@ -256,6 +281,8 @@ export default function SettingsScreen() {
         </Card>
       </ScrollView>
 
+      <BottomFog />
+
       {/*
         A themed dialog rather than `Alert.alert`, so a destructive confirm looks
         like part of the app instead of a system error.
@@ -304,6 +331,18 @@ const styles = StyleSheet.create({
   langSegmented: {
     borderWidth: 0,
     backgroundColor: Colors.surface,
+  },
+  stepperContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 4,
+  },
+  stepperValue: {
+    ...Type.bodyStrong,
+    fontSize: 20,
+    color: Colors.foreground,
   },
   swatches: {
     flexDirection: 'row',

@@ -19,20 +19,12 @@
 
 import { Check, MapPin, Search, X } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Modal, Platform, StyleSheet, View } from 'react-native';
 import MapView, { type MapPressEvent, Marker, type Region } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PressableScale, useFeedback } from '@/components/motion';
-import { Button, IconButton, SearchField } from '@/components/ui';
+import { Button, IconButton, SearchField, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type, softShadow } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import { useT } from '@/lib/i18n';

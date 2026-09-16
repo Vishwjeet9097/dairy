@@ -7,19 +7,12 @@
 
 import { BarChart2, Download, FileText, IndianRupee, Milk, TrendingUp } from 'lucide-react-native';
 import { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { DrawerToggleButton } from 'expo-router/drawer';
 
 import { AnimatedValueText, useFeedback } from '@/components/motion';
-import {
-  Badge,
-  Card,
-  NavRow,
-  Screen,
-  ScreenHeader,
-  SectionHeading,
-} from '@/components/ui';
+import { Badge, BottomFog, Card, NavRow, Screen, ScreenHeader, SectionHeading, Text } from '@/components/ui';
 import { Colors, Layout, Radius, Type } from '@/constants/theme';
 import { useAppTheme } from '@/context/theme-context';
 import {
@@ -191,6 +184,7 @@ export default function ReportsScreen() {
           </View>
         </Card>
       </ScrollView>
+      <BottomFog />
     </Screen>
   );
 }
